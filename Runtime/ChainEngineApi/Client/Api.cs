@@ -1,21 +1,15 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChainEngineSDK.ChainEngineApi.Interfaces;
 using ChainEngineSDK.ChainEngineApi.Model;
 using ChainEngineSDK.ChainEngineApi.Remote.Models;
 using ChainEngineSDK.ChainEngineApi.Services;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
-using UnityEditor;
-using UnityEngine;
 
 namespace ChainEngineSDK.ChainEngineApi.Client
 {
     public class ApiClient
     {
-        private string url = "";
-        
         private string _apikey;
         private string _secret;
         private string _gameId;
@@ -38,22 +32,22 @@ namespace ChainEngineSDK.ChainEngineApi.Client
             _accountId = accountId;
         }
 
-        public string getGameId()
+        public string GetGameId()
         {
             return _gameId;
         }
         
-        public string getApiKey()
+        public string GetApiKey()
         {
             return _apikey;
         }
         
-        public string getSecret()
+        public string GetSecret()
         {
             return _secret;
         }
 
-        public string getAccountId()
+        public string GetAccountId()
         {
             return _accountId;
         }
@@ -63,20 +57,22 @@ namespace ChainEngineSDK.ChainEngineApi.Client
         {
             return await _consoleService.CreatePlayer(walletAddress);
         }
-        
-        public async Task<Nft> CreateNft(NftMetadata metadata)
+
+        public async UniTask<Player> GetPlayerByWallet(string walletAddress)
         {
-            return await CreateNft(metadata, null);
+            return await _consoleService.CreatePlayer(walletAddress);
         }
         
-        public async Task<Nft> CreateNft(NftMetadata metadata, [CanBeNull] string destination)
+        public async Task<Nft> MintNFT(NftMetadata metadata) => await MintNFT(metadata, null);
+
+        public async Task<Nft> MintNFT(NftMetadata metadata, [CanBeNull] string destination)
         {
-            return await _consoleService.CreateNft(metadata);
+            return await _consoleService.MintNFT(metadata);
         }
         
-        public async Task<List<RemoteNFT>> getNFTsByWallet(string address)
+        public async Task<List<RemoteNFT>> GetNFTsByWallet(string address)
         {
-            return await _apiService.getNFTsByPlayer(address);
+            return await _apiService.GetNFTsByPlayer(address);
         }
     }
 }

@@ -16,13 +16,13 @@ namespace ChainEngineSDK.ChainEngineApi.Services
             _client = client; 
         }
 
-        public async UniTask<string> getByWallet(string name)
+        public async UniTask<string> GetByWallet(string name)
         {
             var remote = new DataSourceApi(_client);
             return await remote.GetPlayerByWallet("0x00");
         }
 
-        public async Task<List<RemoteNFT>> getNFTsByPlayer(string wallet)
+        public async Task<List<RemoteNFT>> GetNFTsByPlayer(string wallet)
         {
             var remote = new DataSourceApi(_client);
             return await remote.GetNFTsByPlayer(wallet);

@@ -2,8 +2,8 @@ namespace ChainEngineSDK.ChainEngineApi.Model
 {
     public class NftMetadata
     {
-        public string description;
-        public string name;
-        public string imageURI;
+        public string Description;
+        public string Name;
+        public string ImageUri;
     }
 }

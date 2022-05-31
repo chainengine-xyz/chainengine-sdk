@@ -15,7 +15,7 @@ namespace ChainEngineSDK.ChainEngineApi
             instance.apiClient.Initialize(accountId, gameId, apikey, secret);
         }
 
-        public static ApiClient client
+        public static ApiClient Client
         {
             get => instance.apiClient;
         }

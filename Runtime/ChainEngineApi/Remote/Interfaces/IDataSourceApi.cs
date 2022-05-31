@@ -12,6 +12,6 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Interfaces
 	    public UniTask<List<RemoteNFT>> GetNFTsByPlayer(string wallet);
 
 		public UniTask<Player> CreatePlayer(Player dto);
-		public UniTask<Nft> CreateNft(Nft nft);
+		public UniTask<Nft> MintNFT(Nft nft);
     }
 }

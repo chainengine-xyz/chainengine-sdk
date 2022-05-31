@@ -1,11 +1,8 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ChainEngineSDK.ChainEngineApi.Client;
 using ChainEngineSDK.ChainEngineApi.Interfaces;
 using ChainEngineSDK.ChainEngineApi.Model;
 using ChainEngineSDK.ChainEngineApi.Remote.Datasource;
 using Cysharp.Threading.Tasks;
-using PlasticGui.Configuration.CloudEdition.Welcome;
 
 namespace ChainEngineSDK.ChainEngineApi.Services
 {
@@ -21,27 +18,39 @@ namespace ChainEngineSDK.ChainEngineApi.Services
         public async UniTask<Player> CreatePlayer(string walletAddress)
         {
             var player = new Player{
-                walletAddress = walletAddress,
-                accountId = _client.getAccountId(),
-                gameId = _client.getGameId()
+                WalletAddress = walletAddress,
+                AccountId = _client.GetAccountId(),
+                GameId = _client.GetGameId()
+            };
+            
+            var remote = new DataSourceApi(_client);
+            return await remote.CreatePlayer(player);
+        }
+        
+        public async UniTask<Player> GetPlayerByWallet(string walletAddress)
+        {
+            var player = new Player{
+                WalletAddress = walletAddress,
+                AccountId = _client.GetAccountId(),
+                GameId = _client.GetGameId()
             };
             
             var remote = new DataSourceApi(_client);
             return await remote.CreatePlayer(player);
         }
 
-        public async UniTask<Nft> CreateNft(NftMetadata metadata)
+        public async UniTask<Nft> MintNFT(NftMetadata metadata)
         {
             var nft = new Nft
             {
-                name = metadata.name,
-                description = metadata.description,
-                imageURI = metadata.imageURI,
-                gameId = _client.getGameId()
+                Name = metadata.Name,
+                Description = metadata.Description,
+                ImageUri = metadata.ImageUri,
+                GameId = _client.GetGameId()
             };
             
             var remote = new DataSourceApi(_client);
-            return await remote.CreateNft(nft);
+            return await remote.MintNFT(nft);
         }
     }
 }
