@@ -1,0 +1,17 @@
+{
+  "name": "xyz.chainengine.unity-sdk",
+  "version": "1.0.0",
+  "displayName": "ChainEngine Unity SDK",
+  "description": "SDK to help developers integrate ChainEngine APIs to Unity projects.",
+  "homepage": "https://chainengine.xyz",
+  "hideInEditor": false,
+  "license": "MIT License",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  },
+  "author": {
+    "name": "ChainEngine",
+    "email": "contact@chainengine.xyz",
+    "url": "https://chainengine.xyz"
+  }
+}
