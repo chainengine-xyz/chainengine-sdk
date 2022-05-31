@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ChainEngineSDK.ChainEngineApi.Client;
 using ChainEngineSDK.ChainEngineApi.Model;
 using ChainEngineSDK.ChainEngineApi.Remote.Interfaces;
+using ChainEngineSDK.ChainEngineApi.Remote.Models;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -58,25 +59,30 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
             return "Success!";
         }
 
-        public async UniTask<string> GetNFTsByPlayer(string wallet)
+        public async UniTask<List<RemoteNFT>> GetNFTsByPlayer(string wallet)
         {
-            var www = new UnityWebRequest(_SERVER_URL + "accounts/" + _client.getGameId() + "/nfts?fetchFor=player&playerId=test", "GET");
+            var www = new UnityWebRequest(_SERVER_URL + "accounts/" + _client.getAccountId() + "/nfts?fetchFor=player&playerId=test", "GET");
             
             preflightHeader(www);
 
             www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
 
+            var nfts = new List<RemoteNFT>();
+            
             try
             {
                 var req = await www.SendWebRequest();
                 Debug.Log(req.downloadHandler.text);
+
+                var res = Newtonsoft.Json.JsonConvert.DeserializeObject<RemoteNFTCallResponse>(req.downloadHandler.text);
+                nfts = res.items[0].nfts;
             }
             catch (Exception exception)
             {
                 Debug.Log(exception.Message);
             }
 
-            return "NFTS";
+            return nfts;
         }
 
         public async UniTask<Player> CreatePlayer(Player playerDto)

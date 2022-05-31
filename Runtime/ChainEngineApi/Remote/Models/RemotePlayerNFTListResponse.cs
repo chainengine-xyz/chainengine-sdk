@@ -3,8 +3,8 @@ using ChainEngineSDK.ChainEngineApi.Model;
 
 namespace ChainEngineSDK.ChainEngineApi.Remote.Models
 {
-    public class NFTListResponse
+    public class RemotePlayerNFTListResponse
     {
-        public List<OnChainNFT> players;
+        public List<RemoteNFT> nfts;
     }
 }

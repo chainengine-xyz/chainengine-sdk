@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChainEngineSDK.ChainEngineApi.Interfaces;
 using ChainEngineSDK.ChainEngineApi.Model;
+using ChainEngineSDK.ChainEngineApi.Remote.Models;
 using ChainEngineSDK.ChainEngineApi.Services;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
@@ -72,7 +74,7 @@ namespace ChainEngineSDK.ChainEngineApi.Client
             return await _consoleService.CreateNft(metadata);
         }
         
-        public async UniTask<string> getNFTsByWallet(string address)
+        public async Task<List<RemoteNFT>> getNFTsByWallet(string address)
         {
             return await _apiService.getNFTsByPlayer(address);
         }
