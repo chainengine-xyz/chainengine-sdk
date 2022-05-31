@@ -4,6 +4,7 @@ using ChainEngineSDK.ChainEngineApi.Client;
 using ChainEngineSDK.ChainEngineApi.Model;
 using ChainEngineSDK.ChainEngineApi.Remote.Interfaces;
 using ChainEngineSDK.ChainEngineApi.Remote.Models;
+using ChainEngineSDK.ChainEngineApi.Shared.Exceptions;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -38,9 +39,7 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
             var www = new UnityWebRequest(ServerURL + "accounts/create", "POST");
         
             // Prepare header
-            www.SetRequestHeader("x-api-key", _client.GetApiKey());
-            www.SetRequestHeader("x-api-secret", _client.GetSecret());
-            www.SetRequestHeader("Content-Type", "application/json");
+            PreflightHeader(www);
         
             // Prepare data to upload
             www.uploadHandler = new UploadHandlerRaw(jsonEncoded);
@@ -51,9 +50,9 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
                 var req = await www.SendWebRequest();
                 Debug.Log(req.downloadHandler.text);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                Debug.Log(exception.Message);
+                throw new PlayerNotFound();
             }
 
             return "Success!";
@@ -77,9 +76,9 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
                 var res = Newtonsoft.Json.JsonConvert.DeserializeObject<RemoteNFTCallResponse>(req.downloadHandler.text);
                 nfts = res.Items[0].nfts;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                Debug.Log(exception.Message);
+                throw new UnableToLoadNFTs();
             }
 
             return nfts;
@@ -102,9 +101,9 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
                 var req = await www.SendWebRequest();
                 Debug.Log(req.downloadHandler.text);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                Debug.Log(exception.Message);
+                throw new PlayerNotCreated();
             }
 
             return playerDto;
@@ -131,9 +130,9 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
                 var req = await www.SendWebRequest();
                 Debug.Log(req.downloadHandler.text);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                Debug.Log(exception.Message);
+                throw new UnableToCreateNFT();
             }
 
             return nft;
