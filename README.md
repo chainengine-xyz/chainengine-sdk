@@ -1,6 +1,6 @@
 # ChainEngine SDK Unity
 
-ChainEngine SDK is a easy to use set of tools to enable game developer to quikly integrate their game to the Blockchain.
+ChainEngine SDK is a easy to use set of tools to enable game developers to quikly integrate their game to the Blockchain.
 
 ## Instalation
 
@@ -24,6 +24,8 @@ Parameters:
 ```ChainEngineClient.Initialize("test", "1", "testApiKey", "testApiSecret")```
 
 After calling this method you should be able to interact with the SDK.
+
+*Note*: SDK's methods are asynchronous, which means that the game developer should always call them from async noted methods.
 
 ### CreatePlayer
 
@@ -56,7 +58,7 @@ Parameters:
 Returns:
 - NFT.
 
-```ChainEngineSDK.client.MintNFT(nft)```
+```await ChainEngineSDK.client.MintNFT(nft)```
 
 ## Todo
 
