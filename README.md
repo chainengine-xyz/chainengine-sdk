@@ -38,7 +38,7 @@ Parameters:
 Return:
 - Player 
 
-```await ChainEngineSDK.client.Initialize(accountId, gameId, apiKey, secret)```
+```await ChainEngineSDK.client.CreatePlayer(accountId, gameId, apiKey, secret)```
 
 ### GetNFTsByWallet
 
@@ -48,7 +48,7 @@ Parameters:
 Returns:
 - LIst of NFTs owned by the wallet address.
 
-```await ChainEngineClient.Client.CreatePlayer(walletAddress);```
+```await ChainEngineClient.Client.GetNFTsByWallet(walletAddress);```
 
 ### MintNFT
 
@@ -62,6 +62,7 @@ Returns:
 
 ## Todo
 
+- [ ] Add authentication section to documentation
 - [ ] Add support for wallet selection in WebGL
 - [ ] Add support for Unity 2021.x
 
