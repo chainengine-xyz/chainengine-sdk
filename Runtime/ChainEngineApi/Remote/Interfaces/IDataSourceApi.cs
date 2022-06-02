@@ -8,7 +8,7 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Interfaces
 {
     public interface IDataSourceApi
     {
-        public UniTask<string> GetPlayerByWallet(string wallet);
+        public UniTask<Player> GetPlayerByWallet(string wallet);
         public UniTask<List<RemoteNFT>> GetNFTsByPlayer(string wallet);
 
         public UniTask<Player> CreatePlayer(Player dto);

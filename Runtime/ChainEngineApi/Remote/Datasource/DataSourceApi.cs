@@ -22,40 +22,10 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
             _client = client;
         }
 
-        public async UniTask<string> GetPlayerByWallet(string wallet)
+        public UniTask<Player> GetPlayerByWallet(string wallet)
         {
-            // Prepare object
-            var account = new CreatePlayerDto
-            {
-                Email = "nilto1n@chainengine.xyz",
-                Password = "123456"
-            };
-
-            // Prepare JSON
-            var accountJson = JsonUtility.ToJson(account);
-            var jsonEncoded = new System.Text.UTF8Encoding().GetBytes(accountJson);
-
-            // Prepare uri
-            var www = new UnityWebRequest(ServerURL + "accounts/create", "POST");
-        
-            // Prepare header
-            PreflightHeader(www);
-        
-            // Prepare data to upload
-            www.uploadHandler = new UploadHandlerRaw(jsonEncoded);
-            www.downloadHandler = new DownloadHandlerBuffer();
-
-            try
-            {
-                var req = await www.SendWebRequest();
-                Debug.Log(req.downloadHandler.text);
-            }
-            catch (Exception)
-            {
-                throw new PlayerNotFound();
-            }
-
-            return "Success!";
+            // Waiting new player APIs.
+            throw new NotImplementedException();
         }
 
         public async UniTask<List<RemoteNFT>> GetNFTsByPlayer(string wallet)

@@ -9,7 +9,7 @@ namespace ChainEngineSDK.ChainEngineApi.Interfaces
 {
     public interface IApiService
     {
-        public UniTask<string> GetByWallet(string wallet);
+        public UniTask<Player> GetByWallet(string wallet);
 
         public Task<List<RemoteNFT>> GetNFTsByPlayer(string wallet);
     } 
