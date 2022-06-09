@@ -38,7 +38,7 @@ namespace ChainEngineSDK.ChainEngineApi.Client
             _playerKey = playerKey;
         }
         
-        public string getPlayerKey()
+        public string GetPlayerKey()
         {
             return _playerKey;
         }

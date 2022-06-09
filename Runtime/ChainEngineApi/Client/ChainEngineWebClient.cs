@@ -11,7 +11,7 @@ namespace ChainEngineApi.Client
         public ChainEngineWebClient(ApiClient client, string path, string method)
         {
             _unityWebRequest = new UnityWebRequest(path, method);
-            _unityWebRequest.SetRequestHeader("x-api-key", client.getPlayerKey());
+            _unityWebRequest.SetRequestHeader("x-api-key", client.GetPlayerKey());
             _unityWebRequest.SetRequestHeader("Content-Type", "application/json");
         }
 

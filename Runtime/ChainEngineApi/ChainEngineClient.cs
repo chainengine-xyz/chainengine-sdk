@@ -4,20 +4,17 @@ namespace ChainEngineSDK.ChainEngineApi
 {
     public class ChainEngineClient
     {
-        readonly ApiClient ApiClient = new ApiClient();
+        private readonly ApiClient _apiClient = new ApiClient();
+
+        private static readonly ChainEngineClient SInstance = new ChainEngineClient();
         
-        static readonly ChainEngineClient s_instance = new ChainEngineClient();
-        
-        private ChainEngineClient() { }
+        private ChainEngineClient() {}
 
         public static void Initialize(string accountId, string gameId)
         {
-            s_instance.ApiClient.Initialize(accountId, gameId);
+            SInstance._apiClient.Initialize(accountId, gameId);
         }
 
-        public static ApiClient Client
-        {
-            get => s_instance.ApiClient;
-        }
+        public static ApiClient Client => SInstance._apiClient;
     }
 }

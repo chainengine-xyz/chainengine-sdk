@@ -43,7 +43,7 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
                 
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<Player>(req.downloadHandler.text);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new PlayerNotCreated();
             }
