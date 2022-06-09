@@ -5,31 +5,42 @@ using ChainEngineSDK.ChainEngineApi.Remote.Models;
 using ChainEngineSDK.ChainEngineApi.Services;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using OnChainNFT = ChainEngineSDK.ChainEngineApi.Remote.Models.OnChainNFT;
 
 namespace ChainEngineSDK.ChainEngineApi.Client
 {
     public class ApiClient
     {
-        private string _apikey;
-        private string _secret;
+        private string _playerKey;
         private string _gameId;
         private string _accountId;
 
-        private ApiService _apiService;
-        private ConsoleService _consoleService;
+        private readonly ApiService _apiService;
 
         public ApiClient()
         {
             _apiService = new ApiService(this);
-            _consoleService = new ConsoleService(this);
         }
-        
-        public void Initialize(string accountId, string gameId, string apikey, string secret)
+
+        public void Initialize(string accountId, string gameId)
         {
-            _apikey = apikey;
-            _secret = secret;
             _gameId = gameId;
             _accountId = accountId;
+        }
+
+        public string getAccountId()
+        {
+            return _accountId;
+        }
+
+        public void setPlayerKey(string playerKey)
+        {
+            _playerKey = playerKey;
+        }
+        
+        public string getPlayerKey()
+        {
+            return _playerKey;
         }
 
         public string GetGameId()
@@ -37,42 +48,24 @@ namespace ChainEngineSDK.ChainEngineApi.Client
             return _gameId;
         }
         
-        public string GetApiKey()
-        {
-            return _apikey;
-        }
-        
-        public string GetSecret()
-        {
-            return _secret;
-        }
-
-        public string GetAccountId()
-        {
-            return _accountId;
-        }
-
-        
         public async UniTask<Player> CreatePlayer(string walletAddress)
         {
-            return await _consoleService.CreatePlayer(walletAddress);
+            return await _apiService.CreatePlayer(walletAddress);
         }
 
-        public async UniTask<Player> GetPlayerByWallet(string walletAddress)
+        public async UniTask<Player> GetPlayerInfo()
         {
-            return await _consoleService.CreatePlayer(walletAddress);
+            return await _apiService.GetPlayerInfo();
         }
         
-        public async Task<Nft> MintNFT(NftMetadata metadata) => await MintNFT(metadata, null);
-
-        public async Task<Nft> MintNFT(NftMetadata metadata, [CanBeNull] string destination)
+        public async Task<List<OnChainNFT>> GetPlayerNFTs()
         {
-            return await _consoleService.MintNFT(metadata);
+            return await _apiService.GetPlayerNFTs();
         }
         
-        public async Task<List<RemoteNFT>> GetNFTsByWallet(string address)
+        public async UniTask<OffChainNFT> GetPlayerNFT(string chainId)
         {
-            return await _apiService.GetNFTsByPlayer(address);
+            return await _apiService.GetPlayerNFT(chainId);
         }
     }
 }

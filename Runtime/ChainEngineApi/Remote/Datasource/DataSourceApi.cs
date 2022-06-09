@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using ChainEngineApi.Client;
 using ChainEngineSDK.ChainEngineApi.Client;
 using ChainEngineSDK.ChainEngineApi.Model;
 using ChainEngineSDK.ChainEngineApi.Remote.Interfaces;
@@ -8,111 +11,86 @@ using ChainEngineSDK.ChainEngineApi.Shared.Exceptions;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using OnChainNFT = ChainEngineSDK.ChainEngineApi.Remote.Models.OnChainNFT;
 
 namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
 {
     public class DataSourceApi: IDataSourceApi
     {
-        private const string ServerURL = "http://localhost:3000/";
+        private const string ServerURL = "http://localhost:3000";
 
-        private ApiClient _client;
+        private readonly ApiClient _apiClient;
 
-        public DataSourceApi(ApiClient client)
+        public DataSourceApi(ApiClient apiClient)
         {
-            _client = client;
+            _apiClient = apiClient;
         }
-
-        public UniTask<Player> GetPlayerByWallet(string wallet)
-        {
-            // Waiting new player APIs.
-            throw new NotImplementedException();
-        }
-
-        public async UniTask<List<RemoteNFT>> GetNFTsByPlayer(string wallet)
-        {
-            var www = new UnityWebRequest(ServerURL + "accounts/" + _client.GetAccountId() + "/nfts?fetchFor=player&playerId=test", "GET");
-            
-            PreflightHeader(www);
-
-            www.downloadHandler = new DownloadHandlerBuffer();
-
-            var nfts = new List<RemoteNFT>();
-            
-            try
-            {
-                var req = await www.SendWebRequest();
-                Debug.Log(req.downloadHandler.text);
-
-                var res = Newtonsoft.Json.JsonConvert.DeserializeObject<RemoteNFTCallResponse>(req.downloadHandler.text);
-                nfts = res.Items[0].nfts;
-            }
-            catch (Exception)
-            {
-                throw new UnableToLoadNFTs();
-            }
-
-            return nfts;
-        }
-
+        
         public async UniTask<Player> CreatePlayer(Player playerDto)
         {
-            var json = JsonUtility.ToJson(playerDto);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(playerDto);
             var jsonEncoded = new System.Text.UTF8Encoding().GetBytes(json);
 
-            var www = new UnityWebRequest(ServerURL + "accounts/" + _client.GetAccountId() + "/players", "POST");
-        
-            PreflightHeader(www);
-        
-            www.uploadHandler = new UploadHandlerRaw(jsonEncoded);
-            www.downloadHandler = new DownloadHandlerBuffer();
+            var www = new ChainEngineWebClient(_apiClient, ServerURL + "/players", "POST")
+            {
+                uploadHandler = new UploadHandlerRaw(jsonEncoded),
+                downloadHandler = new DownloadHandlerBuffer()
+            };
 
             try
             {
                 var req = await www.SendWebRequest();
-                Debug.Log(req.downloadHandler.text);
+                
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<Player>(req.downloadHandler.text);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw new PlayerNotCreated();
             }
-
-            return playerDto;
         }
 
-        public async UniTask<Nft> MintNFT(Nft nft)
+        public async UniTask<Player> GetPlayerInfo()
         {
-            var listOfNFTs = new List<Nft> { nft };
-
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(listOfNFTs);
-            var jsonEncoded = new System.Text.UTF8Encoding().GetBytes(json);
-
-            var www = new UnityWebRequest(
-                ServerURL + "accounts/" + _client.GetAccountId() + "/nfts/game/" + nft.GameId, 
-                "POST");
-
-            PreflightHeader(www);
-        
-            www.uploadHandler = new UploadHandlerRaw(jsonEncoded);
-            www.downloadHandler = new DownloadHandlerBuffer();
-
-            try
+            var www = new ChainEngineWebClient(_apiClient, ServerURL + "/players", "GET")
             {
-                var req = await www.SendWebRequest();
-                Debug.Log(req.downloadHandler.text);
-            }
-            catch (Exception)
+                downloadHandler = new DownloadHandlerBuffer()
+            };
+
+            var req = await www.SendWebRequest();
+
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Player>(req.downloadHandler.text);
+        }
+
+        public async UniTask<List<OnChainNFT>> GetPlayerNFTs(string gameId)
+        {
+            var www = new ChainEngineWebClient(_apiClient, ServerURL + "/players/nfts?fetchFor=player", "GET")
             {
-                throw new UnableToCreateNFT();
-            }
+                downloadHandler = new DownloadHandlerBuffer()
+            };
+
+            var req = await www.SendWebRequest();
+            Debug.Log(req.downloadHandler.text);
+
+            var callResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<OnChainNFTCallResponse>(req.downloadHandler.text);
+
+            return callResponse.Items.First().nfts;
+        }
+
+        public async UniTask<OffChainNFT> GetPlayerNFT(string id)
+        {
+            var www = new ChainEngineWebClient(_apiClient, ServerURL + "/players/nfts/" + id, "GET")
+            {
+                downloadHandler = new DownloadHandlerBuffer()
+            };
+
+            var req = await www.SendWebRequest();
+            Debug.Log(req.downloadHandler.text);
+
+            var nft = Newtonsoft.Json.JsonConvert.DeserializeObject<OffChainNFT>(req.downloadHandler.text);
 
             return nft;
         }
-        
-        private void PreflightHeader(UnityWebRequest request) {
-            request.SetRequestHeader("x-api-key", _client.GetApiKey());
-            request.SetRequestHeader("x-api-secret", _client.GetSecret());
-            request.SetRequestHeader("Content-Type", "application/json");
-        }
     }
+    
     
 }
