@@ -18,10 +18,8 @@ Initializing the SDK should be as simples as calling it's instatiator method.
 Parameters:
 - accountId: Id of the Account
 - gameId: Id of the Game
-- apiKey: Developer API Key
-- secret: Developer Secret
 
-```ChainEngineClient.Initialize("test", "1", "testApiKey", "testApiSecret")```
+```ChainEngineClient.Initialize("test", "1")```
 
 After calling this method you should be able to interact with the SDK.
 
@@ -30,35 +28,36 @@ After calling this method you should be able to interact with the SDK.
 ### CreatePlayer
 
 Parameters:
-- accountId: Id of the Account
-- gameId: Id of the Game
-- apiKey: Developer API Key
-- secret: Developer Secret
-
-Return:
-- Player 
-
-```await ChainEngineSDK.client.CreatePlayer(accountId, gameId, apiKey, secret)```
-
-### GetNFTsByWallet
-
-Parameters:
-- walletAddress: A string containing a valid wallet address
+- walletAddress: Wallet address for the player wallet
 
 Returns:
-- LIst of NFTs owned by the wallet address.
+- An instance of Player. 
 
-```await ChainEngineClient.Client.GetNFTsByWallet(walletAddress);```
+```await ChainEngineClient.Client.CreatePlayer("0x01")```
 
-### MintNFT
-
-Parameters:
-- NFT: An instance of a NFT.
+### GetPlayerInfo
 
 Returns:
-- NFT.
+- An instance of Player.
 
-```await ChainEngineSDK.client.MintNFT(nft)```
+```await ChainEngineClient.Client.GetPlayerInfo()```
+
+### GetPlayerNFT
+
+Parameters:
+- Id: The id of the NFT as issued by ChainEngine during minting.
+
+Returns:
+- An instance of OffChainNFT.
+
+```await ChainEngineSDK.Client.GetPlayerNFT(id)```
+
+### GetPlayerNFTs
+
+Returns:
+- A list of instances instance of OnChainNFT.
+
+```await ChainEngineSDK.Client.GetPlayerNFTs()```
 
 ## Todo
 

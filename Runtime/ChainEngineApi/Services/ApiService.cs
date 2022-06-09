@@ -1,32 +1,51 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ChainEngineSDK.ChainEngineApi.Client;
 using ChainEngineSDK.ChainEngineApi.Model;
 using ChainEngineSDK.ChainEngineApi.Remote.Datasource;
 using ChainEngineSDK.ChainEngineApi.Remote.Models;
+using ChainEngineSDK.ChainEngineApi.Shared.Exceptions;
 using Cysharp.Threading.Tasks;
+using OnChainNFT = ChainEngineSDK.ChainEngineApi.Remote.Models.OnChainNFT;
 
 namespace ChainEngineSDK.ChainEngineApi.Services
 {
     public class ApiService : Interfaces.IApiService
     {
-        private ApiClient _client;
+        private readonly ApiClient _client;
+        private readonly DataSourceApi _dataSource;
         
         public ApiService(ApiClient client)
         {
-            _client = client; 
+            _client = client;
+            _dataSource = new DataSourceApi(client);
         }
 
-        public async UniTask<Player> GetByWallet(string wallet)
+        public UniTask<Player> CreatePlayer(string walletAddress)
         {
-            var remote = new DataSourceApi(_client);
-            return await remote.GetPlayerByWallet(wallet);
+            var player = new Player{
+                WalletAddress = walletAddress,
+                AccountId = _client.getAccountId(),
+                GameId = _client.GetGameId()
+            };
+            
+            return _dataSource.CreatePlayer(player);
         }
 
-        public async Task<List<RemoteNFT>> GetNFTsByPlayer(string wallet)
+        public UniTask<Player> GetPlayerInfo()
         {
-            var remote = new DataSourceApi(_client);
-            return await remote.GetNFTsByPlayer(wallet);
+            return _dataSource.GetPlayerInfo();
+        }
+
+        public UniTask<List<OnChainNFT>> GetPlayerNFTs()
+        {
+            if (_client.GetGameId() == null) throw new UnableToLoadNFTs("game id not set properly");
+            
+            return _dataSource.GetPlayerNFTs(_client.GetGameId());
+        }
+
+        public UniTask<OffChainNFT> GetPlayerNFT(string id)
+        {
+            return _dataSource.GetPlayerNFT(id);
         }
     }
 }
