@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using ChainEngineApi.Client;
+using ChainEngineApi.Model;
+using ChainEngineApi.Remote.Models;
 using ChainEngineSDK.ChainEngineApi.Client;
-using ChainEngineSDK.ChainEngineApi.Model;
 using ChainEngineSDK.ChainEngineApi.Remote.Interfaces;
-using ChainEngineSDK.ChainEngineApi.Remote.Models;
 using ChainEngineSDK.ChainEngineApi.Shared.Exceptions;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-using OnChainNFT = ChainEngineSDK.ChainEngineApi.Remote.Models.OnChainNFT;
 
 namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
 {
@@ -61,9 +58,10 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Player>(req.downloadHandler.text);
         }
 
-        public async UniTask<List<OnChainNFT>> GetPlayerNFTs(string gameId)
+        public async Task<NftCallResponse> GetPlayerNFTs(int page, int limit)
         {
-            var www = new ChainEngineWebClient(_apiClient, ServerURL + "/players/nfts?fetchFor=player", "GET")
+            var uri = ServerURL + "/players/nfts?queryBy=player&limit=" + limit + "&page=" + page;
+            var www = new ChainEngineWebClient(_apiClient, uri, "GET")
             {
                 downloadHandler = new DownloadHandlerBuffer()
             };
@@ -71,12 +69,12 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
             var req = await www.SendWebRequest();
             Debug.Log(req.downloadHandler.text);
 
-            var callResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<OnChainNFTCallResponse>(req.downloadHandler.text);
+            NftCallResponse callResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<NftCallResponse>(req.downloadHandler.text);
 
-            return callResponse.Items.First().nfts;
+            return callResponse;
         }
 
-        public async UniTask<OffChainNFT> GetPlayerNFT(string id)
+        public async UniTask<Nft> GetPlayerNFT(string id)
         {
             var www = new ChainEngineWebClient(_apiClient, ServerURL + "/players/nfts/" + id, "GET")
             {
@@ -86,7 +84,7 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
             var req = await www.SendWebRequest();
             Debug.Log(req.downloadHandler.text);
 
-            var nft = Newtonsoft.Json.JsonConvert.DeserializeObject<OffChainNFT>(req.downloadHandler.text);
+            var nft = Newtonsoft.Json.JsonConvert.DeserializeObject<Nft>(req.downloadHandler.text);
 
             return nft;
         }

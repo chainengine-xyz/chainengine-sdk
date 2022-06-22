@@ -1,11 +1,9 @@
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using ChainEngineApi.Model;
+using ChainEngineApi.Remote.Models;
 using ChainEngineSDK.ChainEngineApi.Client;
-using ChainEngineSDK.ChainEngineApi.Model;
 using ChainEngineSDK.ChainEngineApi.Remote.Datasource;
-using ChainEngineSDK.ChainEngineApi.Remote.Models;
-using ChainEngineSDK.ChainEngineApi.Shared.Exceptions;
 using Cysharp.Threading.Tasks;
-using OnChainNFT = ChainEngineSDK.ChainEngineApi.Remote.Models.OnChainNFT;
 
 namespace ChainEngineSDK.ChainEngineApi.Services
 {
@@ -36,14 +34,12 @@ namespace ChainEngineSDK.ChainEngineApi.Services
             return _dataSource.GetPlayerInfo();
         }
 
-        public UniTask<List<OnChainNFT>> GetPlayerNFTs()
+        public async Task<NftCallResponse> GetPlayerNFTs(int page, int limit)
         {
-            if (_client.GetGameId() == null) throw new UnableToLoadNFTs("game id not set properly");
-            
-            return _dataSource.GetPlayerNFTs(_client.GetGameId());
+            return await _dataSource.GetPlayerNFTs(page, limit);
         }
 
-        public UniTask<OffChainNFT> GetPlayerNFT(string id)
+        public UniTask<Nft> GetPlayerNFT(string id)
         {
             return _dataSource.GetPlayerNFT(id);
         }
