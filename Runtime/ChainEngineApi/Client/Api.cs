@@ -55,7 +55,7 @@ namespace ChainEngineSDK.ChainEngineApi.Client
             return await _apiService.GetPlayerInfo();
         }
         
-        public async Task<PlayerNftCollection> GetPlayerNFTs(int page = 1, int limit = 10)
+        public async UniTask<PlayerNftCollection> GetPlayerNFTs(int page = 1, int limit = 10)
         {
             var collection = new PlayerNftCollection(limit, page, _apiService);
             return await collection.FirstPage();

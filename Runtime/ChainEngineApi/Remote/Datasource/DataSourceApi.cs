@@ -67,7 +67,6 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Datasource
             };
 
             var req = await www.SendWebRequest();
-            Debug.Log(req.downloadHandler.text);
 
             NftCallResponse callResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<NftCallResponse>(req.downloadHandler.text);
 
