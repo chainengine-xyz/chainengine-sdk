@@ -38,11 +38,8 @@ namespace ChainEngineApi.Model
 
             _total = response.Total;
             _page = response.Page;
-
-            foreach (var nft in nfts)
-            {
-                _items.Add(nft);
-            }
+            
+            _items.AddRange(nfts);
 
             return nfts;
         }
