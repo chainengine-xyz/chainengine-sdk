@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace ChainEngineSDK.ChainEngineApi.Model
+namespace ChainEngineApi.Model
 {
     public class Player
     {

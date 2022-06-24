@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using ChainEngineSDK.ChainEngineApi.Model;
-using ChainEngineSDK.ChainEngineApi.Remote.Models;
+using System.Threading.Tasks;
+using ChainEngineApi.Model;
+using ChainEngineApi.Remote.Models;
 using Cysharp.Threading.Tasks;
-using Nethereum.RPC.Eth;
-using OnChainNFT = ChainEngineSDK.ChainEngineApi.Remote.Models.OnChainNFT;
 
 namespace ChainEngineSDK.ChainEngineApi.Remote.Interfaces
 {
@@ -23,12 +20,12 @@ namespace ChainEngineSDK.ChainEngineApi.Remote.Interfaces
         /*
          * Game developer should be able to fetch player's NFTs.
          */
-        public UniTask<List<OnChainNFT>> GetPlayerNFTs(string gameId);
+        public Task<NftCallResponse> GetPlayerNFTs(int page, int limit);
 
         /*
          * Developer should be able to fetch an specific NFT.
          */
-        public UniTask<OffChainNFT> GetPlayerNFT(string id);
+        public UniTask<Nft> GetPlayerNFT(string id);
 
     }
 }

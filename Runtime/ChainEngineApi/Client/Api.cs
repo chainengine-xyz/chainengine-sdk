@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChainEngineSDK.ChainEngineApi.Model;
-using ChainEngineSDK.ChainEngineApi.Remote.Models;
+using ChainEngineApi.Model;
 using ChainEngineSDK.ChainEngineApi.Services;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
-using OnChainNFT = ChainEngineSDK.ChainEngineApi.Remote.Models.OnChainNFT;
 
 namespace ChainEngineSDK.ChainEngineApi.Client
 {
@@ -58,12 +55,13 @@ namespace ChainEngineSDK.ChainEngineApi.Client
             return await _apiService.GetPlayerInfo();
         }
         
-        public async Task<List<OnChainNFT>> GetPlayerNFTs()
+        public async Task<PlayerNftCollection> GetPlayerNFTs(int page = 1, int limit = 10)
         {
-            return await _apiService.GetPlayerNFTs();
+            var collection = new PlayerNftCollection(limit, page, _apiService);
+            return await collection.FirstPage();
         }
         
-        public async UniTask<OffChainNFT> GetPlayerNFT(string chainId)
+        public async UniTask<Nft> GetPlayerNFT(string chainId)
         {
             return await _apiService.GetPlayerNFT(chainId);
         }
