@@ -20,14 +20,9 @@ namespace ChainEngineApi.Model
         public string Status;
         
         [JsonProperty("metadata")]
-        public Dictionary<string, object> Metadata;
+        public NftMetadata Metadata;
         
         [JsonProperty("ownerPlayerId")]
         public string OwnerPlayerId;
-        
-        public object GetMetadataValue(string field)
-        {
-            return Metadata.GetValueOrDefault(field);
-        }
     }
 }
