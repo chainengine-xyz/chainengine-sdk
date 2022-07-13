@@ -14,6 +14,6 @@ namespace ChainEngineSDK.Model
         public string GameId;
         
         [JsonProperty("apiKey")]
-        public string apiKey;
+        public string APIKey;
     }
 }

@@ -22,7 +22,7 @@ namespace ChainEngineSDK.Services
         {
             var player = new Player{
                 WalletAddress = walletAddress,
-                AccountId = _chainEngineClient.getAccountId(),
+                AccountId = _chainEngineClient.GetAccountId(),
                 GameId = _chainEngineClient.GetGameId()
             };
             

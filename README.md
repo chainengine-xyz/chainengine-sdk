@@ -19,7 +19,7 @@ Parameters:
 - accountId: Id of the Account
 - gameId: Id of the Game
 
-```ChainEngineClient.Initialize("test", "1")```
+```var client = new ChainEngineClient(accountId, gameId)```
 
 After calling this method you should be able to interact with the SDK.
 
@@ -33,31 +33,42 @@ Parameters:
 Returns:
 - An instance of Player. 
 
-```await ChainEngineClient.Client.CreatePlayer("0x01")```
+```var player = await client.CreatePlayer(walletAddress)```
+
+### SetPlayerKey
+
+Note: Calling this method is required to perform player-related actions and allows the game developer to identify which player is connected to the SDK instance.
+
+Parameters:
+- apikey: Apikey generated during player creation
+
+Returns: Nothing
+
+```client.SetPlayerKey(apikey)```
 
 ### GetPlayerInfo
 
 Returns:
 - An instance of Player.
 
-```await ChainEngineClient.Client.GetPlayerInfo()```
+```var player = await client.GetPlayerInfo()```
 
-### GetPlayerNFT
+### GetNFT
 
 Parameters:
 - Id: The id of the NFT as issued by ChainEngine during minting.
 
 Returns:
-- An instance of OffChainNFT.
+- An instance of NFT.
 
-```await ChainEngineSDK.Client.GetPlayerNFT(id)```
+```var nft = await client.GetNFT(id)```
 
 ### GetPlayerNFTs
 
 Returns:
-- A list of instances instance of OnChainNFT.
+- A instance of PlayerNftCollection containing a list of NFTs.
 
-```await ChainEngineSDK.Client.GetPlayerNFTs()```
+```var nfts = await client.GetPlayerNFTs()```
 
 ## Todo
 

@@ -6,6 +6,6 @@ namespace ChainEngineSDK.Remote.Models
     public class NewPlayerResponse
     {
             [JsonProperty("newPlayer")]
-            public Player player;
+            public Player Player;
     }
 }

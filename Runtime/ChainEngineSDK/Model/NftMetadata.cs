@@ -20,7 +20,7 @@ namespace ChainEngineSDK.Model
         public Dictionary<string, object> Attributes;
         
         [JsonProperty("URI")]
-        public string URI;
+        public string Uri;
         
         public object GetAttributeValue(string field)
         {

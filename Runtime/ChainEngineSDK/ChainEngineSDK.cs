@@ -19,12 +19,12 @@ namespace ChainEngineSDK
             _accountId = accountId;
         }
 
-        public string getAccountId()
+        public string GetAccountId()
         {
             return _accountId;
         }
 
-        public void setPlayerKey(string playerKey)
+        public void SetPlayerKey(string playerKey)
         {
             _playerKey = playerKey;
         }
@@ -55,7 +55,7 @@ namespace ChainEngineSDK
             return await collection.FirstPage();
         }
         
-        public async UniTask<Nft> GetPlayerNFT(string id)
+        public async UniTask<Nft> GetNFT(string id)
         {
             return await _apiService.GetPlayerNFT(id);
         }
