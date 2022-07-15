@@ -6,6 +6,7 @@ using ChainEngineSDK.Remote.Interfaces;
 using ChainEngineSDK.Remote.Models;
 using ChainEngineSDK.Shared.Exceptions;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine.Networking;
 
 namespace ChainEngineSDK.Remote.Datasource
@@ -28,13 +29,7 @@ namespace ChainEngineSDK.Remote.Datasource
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(playerDto);
                 var jsonEncoded = new System.Text.UTF8Encoding().GetBytes(json);
 
-                var www = new ChainEngineWebClient(_apiClient, ServerURL + "/clientapp/players", "POST")
-                {
-                    uploadHandler = new UploadHandlerRaw(jsonEncoded),
-                    downloadHandler = new DownloadHandlerBuffer()
-                };
-                
-                var req = await www.SendWebRequest();
+                var req = await SendRequest("/clientapp/players", "POST", jsonEncoded);
                 
                 var newPlayer = Newtonsoft.Json.JsonConvert.DeserializeObject<NewPlayerResponse>(req.downloadHandler.text);
                 if(newPlayer == null) throw new Exception("Invalid response from api");
@@ -43,7 +38,7 @@ namespace ChainEngineSDK.Remote.Datasource
             }
             catch (Exception exception)
             {
-                throw new PlayerNotCreated(exception.Message);
+                throw new PlayerNotCreated(exception.Message, exception);
             }
         }
 
@@ -51,17 +46,12 @@ namespace ChainEngineSDK.Remote.Datasource
         {
             try
             {
-                var www = new ChainEngineWebClient(_apiClient, ServerURL + "/clientapp/players", "GET")
-                {
-                    downloadHandler = new DownloadHandlerBuffer()
-                };
-
-                var req = await www.SendWebRequest();
+                var req = await SendRequest("/clientapp/players", "GET");
 
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<Player>(req.downloadHandler.text);
             } catch (Exception exception)
             {
-                throw new UnableToLoadPlayerInfo(exception.Message);
+                throw new UnableToLoadPlayerInfo(exception.Message, exception);
             }
         }
 
@@ -69,20 +59,14 @@ namespace ChainEngineSDK.Remote.Datasource
         {
             try
             {
-                var uri = ServerURL + "/clientapp/players/nfts?queryBy=player&limit=" + limit + "&page=" + page;
-                var www = new ChainEngineWebClient(_apiClient, uri, "GET")
-                {
-                    downloadHandler = new DownloadHandlerBuffer()
-                };
-
-                var req = await www.SendWebRequest();
+                var req = await SendRequest("/clientapp/players/nfts?queryBy=player&limit=" + limit + "&page=" + page, "GET");
 
                 NftCallResponse callResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<NftCallResponse>(req.downloadHandler.text);
 
                 return callResponse;
             } catch (Exception exception)
             {
-                throw new UnableToLoadNFTs(exception.Message);
+                throw new UnableToLoadNFTs(exception.Message, exception);
             }
         }
 
@@ -90,12 +74,7 @@ namespace ChainEngineSDK.Remote.Datasource
         {
             try
             {
-                var www = new ChainEngineWebClient(_apiClient, ServerURL + "/clientapp/players/nfts/" + id, "GET")
-                {
-                    downloadHandler = new DownloadHandlerBuffer()
-                };
-
-                var req = await www.SendWebRequest();
+                var req = await SendRequest("/clientapp/players/nfts/" + id, "GET");
 
                 var nft = Newtonsoft.Json.JsonConvert.DeserializeObject<Nft>(req.downloadHandler.text);
 
@@ -103,10 +82,23 @@ namespace ChainEngineSDK.Remote.Datasource
             }
             catch (Exception exception)
             {
-                throw new UnableToLoadNFTs(exception.Message);
+                throw new UnableToLoadNFTs(exception.Message, exception);
             }
         }
+
+        private async UniTask<UnityWebRequest> SendRequest(string url, string method, [CanBeNull] byte[] encodedData = null)
+        {
+            var www = new ChainEngineWebClient(_apiClient, ServerURL + url, method);
+
+            if (encodedData != null)
+            {
+                www.uploadHandler = new UploadHandlerRaw(encodedData);
+            }
+            
+            www.downloadHandler = new DownloadHandlerBuffer();
+                
+            return await www.SendWebRequest();
+        }
     }
-    
     
 }

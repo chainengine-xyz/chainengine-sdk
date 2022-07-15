@@ -16,7 +16,7 @@ namespace ChainEngineSDK.Model
         public string GameId;
         
         [JsonProperty("onChainId")]
-        public string ChainId;
+        public string OnChainId;
         
         [JsonProperty("chain")]
         public string Chain;
