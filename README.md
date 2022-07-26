@@ -24,7 +24,7 @@ After calling this method you should be able to interact with the SDK.
 
 *Note*: SDK's methods are asynchronous, which means that the game developer should always call them from async noted methods.
 
-### GetPlayer
+### CreateOrFetchPlayer
 
 Parameters:
 - walletAddress: Wallet address for the player wallet
@@ -33,13 +33,6 @@ Returns:
 - An instance of Player.
 
 ```var player = await client.CreateOrFetchPlayer(walletAddress)```
-
-### UpdatePlayer
-
-Returns:
-- An instance of Player.
-
-```var player = await client.UpdatePlayer()```
 
 ### GetNFT
 
