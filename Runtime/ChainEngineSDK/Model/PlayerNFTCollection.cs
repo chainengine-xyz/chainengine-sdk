@@ -6,15 +6,15 @@ namespace ChainEngineSDK.Model
 {
     public class PlayerNftCollection
     {
-        private int _total = 0;
-        private int _limit = 10;
-        private int _page = 1;
+        private int _total;
+        private readonly int _limit;
+        private int _page;
         
-        private readonly ApiService _service;
+        private readonly PlayerService _service;
 
         private readonly List<Nft> _items = new List<Nft>();
 
-        public PlayerNftCollection(int limit, int page, ApiService service)
+        public PlayerNftCollection(int limit, int page, PlayerService service)
         {
             _limit = limit;
             _page = page;
@@ -33,7 +33,7 @@ namespace ChainEngineSDK.Model
 
         private async Task<List<Nft>> FetchData()
         {
-            var response = await _service.GetPlayerNFTs(_page, _limit);
+            var response = await _service.GetNFTs(_page, _limit);
             var nfts = response.Items[0].Nfts;
 
             _total = response.Total;

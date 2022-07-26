@@ -22,7 +22,7 @@ namespace ChainEngineSDK.Remote.Datasource
             _apiClient = client;
         }
         
-        public async UniTask<Player> CreatePlayer(Player playerDto)
+        public async UniTask<Player> CreateOrFetchPlayer(Player playerDto)
         {
             try
             {
@@ -42,20 +42,7 @@ namespace ChainEngineSDK.Remote.Datasource
             }
         }
 
-        public async UniTask<Player> GetPlayerInfo()
-        {
-            try
-            {
-                var req = await SendRequest("/clientapp/players", "GET");
-
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<Player>(req.downloadHandler.text);
-            } catch (Exception exception)
-            {
-                throw new UnableToLoadPlayerInfo(exception.Message, exception);
-            }
-        }
-
-        public async Task<NftCallResponse> GetPlayerNFTs(int page, int limit)
+        public async UniTask<NftCallResponse> GetPlayerNFTs(int page, int limit)
         {
             try
             {
@@ -88,7 +75,7 @@ namespace ChainEngineSDK.Remote.Datasource
 
         private async UniTask<UnityWebRequest> SendRequest(string url, string method, [CanBeNull] byte[] encodedData = null)
         {
-            var www = new ChainEngineWebClient(_apiClient, ServerURL + url, method);
+            var www = new ChainEngineWebClient(_apiClient.PlayerKey, ServerURL + url, method, _apiClient.ApiMode);
 
             if (encodedData != null)
             {

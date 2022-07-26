@@ -1,63 +1,58 @@
-using ChainEngineSDK.Model;
-using ChainEngineSDK.Services;
+using System;
 using Cysharp.Threading.Tasks;
+using ChainEngineSDK.Services;
+using ChainEngineSDK.Model;
 
 namespace ChainEngineSDK
 {
     public class ChainEngineClient
     {
-        private string _playerKey;
-        private string _gameId;
-        private string _accountId;
+        private const string ACCOUNT_MODE_TEST = "testnet";
+        private const string ACCOUNT_MODE_PROD = "mainnet";
+        private readonly PlayerService _playerService;
+        private bool _isProdMode;
+        private Player _player;
 
-        private readonly ApiService _apiService;
-
-        public ChainEngineClient(string accountId, string gameId)
+        public ChainEngineClient(string gameId)
         {
-            _apiService = new ApiService(this);
-            _gameId = gameId;
-            _accountId = accountId;
+            _playerService = new PlayerService(this);
+            GameId = gameId;
         }
 
-        public string GetAccountId()
-        {
-            return _accountId;
-        }
+        public string PlayerKey => _player?.APIKey;
 
-        public void SetPlayerKey(string playerKey)
+        public string GameId { get; }
+
+        public string ApiMode => _isProdMode ? ACCOUNT_MODE_PROD : ACCOUNT_MODE_TEST;
+
+        public void SetApiMode(bool mode)
         {
-            _playerKey = playerKey;
+            _isProdMode = mode;
         }
         
-        public string GetPlayerKey()
+        public bool SwitchApiMode()
         {
-            return _playerKey;
+            _isProdMode = !_isProdMode;
+
+            return _isProdMode;
         }
 
-        public string GetGameId()
+        public async UniTask<Player> CreateOrFetchPlayer(string walletAddress)
         {
-            return _gameId;
-        }
-        
-        public async UniTask<Player> CreatePlayer(string walletAddress)
-        {
-            return await _apiService.CreatePlayer(walletAddress);
+            _player = await _playerService.CreateOrFetch(walletAddress);
+            
+            return _player;
         }
 
-        public async UniTask<Player> GetPlayerInfo()
-        {
-            return await _apiService.GetPlayerInfo();
-        }
-        
         public async UniTask<PlayerNftCollection> GetPlayerNFTs(int page = 1, int limit = 10)
         {
-            var collection = new PlayerNftCollection(limit, page, _apiService);
+            var collection = new PlayerNftCollection(limit, page, _playerService);
             return await collection.FirstPage();
         }
         
         public async UniTask<Nft> GetNFT(string id)
         {
-            return await _apiService.GetPlayerNFT(id);
+            return await _playerService.GetNFT(id);
         }
     }
 }
