@@ -7,9 +7,6 @@ namespace ChainEngineSDK.Model
         [JsonProperty("walletAddress")]
         public string WalletAddress;
         
-        [JsonProperty("accountId")]
-        public string AccountId;
-        
         [JsonProperty("gameId")]
         public string GameId;
         

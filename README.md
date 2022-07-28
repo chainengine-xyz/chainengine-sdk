@@ -1,57 +1,38 @@
 # ChainEngine SDK Unity
 
-ChainEngine SDK is a easy to use set of tools to enable game developers to quikly integrate their game to the Blockchain.
+ChainEngine SDK is a easy to use set of tools to enable game developers to quickly integrate their game to the Blockchain.
 
-## Instalation
+## Installation
 
-To install the API you should download this repositóry anywhere in your computer and link it to your Unity Project using the Package Manager window, selecting the "add from disk" option.
+To install the API you should download this repository anywhere in your computer and link it to your Unity Project using the Package Manager window, selecting the "add from disk" option.
 
-Once the SDK is importated you're ready to integrate your script to the SDK.
+Once the SDK is imported you're ready to integrate your script to the SDK.
 
 ![](https://i.imgur.com/q5DGkaq.png)
 
 
 ## SDK Initialization
 
-Initializing the SDK should be as simples as calling it's instatiator method.
+Initializing the SDK should be as simples as calling it's constructor method.
 
 Parameters:
-- accountId: Id of the Account
 - gameId: Id of the Game
 
-```var client = new ChainEngineClient(accountId, gameId)```
+```var client = new ChainEngineClient(gameId)```
 
 After calling this method you should be able to interact with the SDK.
 
 *Note*: SDK's methods are asynchronous, which means that the game developer should always call them from async noted methods.
 
-### CreatePlayer
+### CreateOrFetchPlayer
 
 Parameters:
 - walletAddress: Wallet address for the player wallet
 
 Returns:
-- An instance of Player. 
-
-```var player = await client.CreatePlayer(walletAddress)```
-
-### SetPlayerKey
-
-Note: Calling this method is required to perform player-related actions and allows the game developer to identify which player is connected to the SDK instance.
-
-Parameters:
-- apikey: Apikey generated during player creation
-
-Returns: Nothing
-
-```client.SetPlayerKey(apikey)```
-
-### GetPlayerInfo
-
-Returns:
 - An instance of Player.
 
-```var player = await client.GetPlayerInfo()```
+```var player = await client.CreateOrFetchPlayer(walletAddress)```
 
 ### GetNFT
 

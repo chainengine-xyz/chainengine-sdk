@@ -1,6 +1,6 @@
 {
     "name": "ChainEngine.SDK",
-    "rootNamespace": "",
+    "rootNamespace": "./",
     "references": [
         "Nethereum",
         "UniTask",

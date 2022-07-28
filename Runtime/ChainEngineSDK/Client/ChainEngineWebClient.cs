@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine.Networking;
 
 namespace ChainEngineSDK.Client
@@ -7,13 +8,18 @@ namespace ChainEngineSDK.Client
     {
         private readonly UnityWebRequest _unityWebRequest;
 
-        public ChainEngineWebClient(ChainEngineClient client, string path, string method)
+        public ChainEngineWebClient(string playerApiKey, string path, string method, [CanBeNull] string apiMode)
         {
             _unityWebRequest = new UnityWebRequest(path, method);
 
-            if (!string.IsNullOrEmpty(client.GetPlayerKey()))
+            if (!string.IsNullOrEmpty(playerApiKey))
             {
-                _unityWebRequest.SetRequestHeader("x-api-key", client.GetPlayerKey());
+                _unityWebRequest.SetRequestHeader("x-api-key", playerApiKey);
+            }
+            
+            if (!string.IsNullOrEmpty(apiMode))
+            {
+                _unityWebRequest.SetRequestHeader("api-mode", apiMode);
             }
             
             _unityWebRequest.SetRequestHeader("Content-Type", "application/json");
