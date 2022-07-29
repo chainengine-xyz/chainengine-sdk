@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using ChainEngineSDK.Client;
 using ChainEngineSDK.Model;
 using ChainEngineSDK.Remote.Interfaces;
@@ -13,7 +12,10 @@ namespace ChainEngineSDK.Remote.Datasource
 {
     public class DataSourceApi: IDataSourceApi
     {
-        private const string ServerURL = "https://api.chainengine.xyz";
+        // public static readonly string ServerURL = "https://api.chainengine.xyz";
+        // public const string UiURL = "https://console.chainengine.xyz";
+        public const string ServerURL = "http://localhost:3000";
+        public const string UiURL = "https://localhost:1234";
 
         private readonly ChainEngineClient _apiClient;
 
@@ -27,12 +29,14 @@ namespace ChainEngineSDK.Remote.Datasource
             try
             {
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(playerDto);
+                
                 var jsonEncoded = new System.Text.UTF8Encoding().GetBytes(json);
-
+                
                 var req = await SendRequest("/clientapp/players", "POST", jsonEncoded);
                 
                 var newPlayer = Newtonsoft.Json.JsonConvert.DeserializeObject<NewPlayerResponse>(req.downloadHandler.text);
-                if(newPlayer == null) throw new Exception("Invalid response from api");
+                
+                if (newPlayer == null) throw new Exception("Invalid response from api");
 
                 return newPlayer.Player;
             }
@@ -87,5 +91,4 @@ namespace ChainEngineSDK.Remote.Datasource
             return await www.SendWebRequest();
         }
     }
-    
 }
