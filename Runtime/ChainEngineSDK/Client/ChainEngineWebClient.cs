@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace ChainEngineSDK.Client
@@ -11,7 +12,7 @@ namespace ChainEngineSDK.Client
         public ChainEngineWebClient(string playerApiKey, string path, string method, [CanBeNull] string apiMode)
         {
             _unityWebRequest = new UnityWebRequest(path, method);
-
+            
             if (!string.IsNullOrEmpty(playerApiKey))
             {
                 _unityWebRequest.SetRequestHeader("x-api-key", playerApiKey);
