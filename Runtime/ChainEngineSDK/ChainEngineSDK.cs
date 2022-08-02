@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text.Json;
 using ChainEngineSDK.Actions;
 using ChainEngineSDK.Client;
 using Cysharp.Threading.Tasks;
@@ -8,6 +6,10 @@ using ChainEngineSDK.Services;
 using ChainEngineSDK.Model;
 using ChainEngineSDK.Remote.Datasource;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace ChainEngineSDK
 {
@@ -24,23 +26,12 @@ namespace ChainEngineSDK
 
         [SerializeField]
         private string _gameId;
-        
-        private static bool Exists() {
-            return _instance != null;
-        }
 
-        private static bool VerifyGameId()
-        {
-            return _instance != null && _instance.GameId != "";
-        }
-        
         void Awake() {
             if (_instance == null) {
-                Application.runInBackground = true;
-                
                 _instance = this;
             
-                _socketClient = SocketClient.Build("metamask");
+                _socketClient = SocketClient.Build("wallet");
                 _playerService = new PlayerService(_instance);
                 
                 DontDestroyOnLoad(this.gameObject);
@@ -89,34 +80,29 @@ namespace ChainEngineSDK
             return _player;
         }
 
-        public void MetamaskLogin()
+        public async void WalletLogin()
         {
-            var nonce = Guid.NewGuid().ToString();
+            var nonce = await _playerService.GetNonce();
             
-            _socketClient.On($"metamask/{nonce}", (response) =>
+            _socketClient.OnUnityThread($"login/{nonce}", (response) =>
             {
-                if (response.Count != 1) return;
+                var data = response.GetValue<AuthSocket>();
                 
-                var data = response.GetValue().Deserialize<Dictionary<string, string>>();
-
-                if (data!.ContainsKey("error"))
+                if (data!.Error != null)
                 {
-                    Debug.Log(data!["error"]);
-                } else if (data!.ContainsKey("walletAddress"))
+                    Debug.Log(data.Error);
+                } else if (data!.WalletAddress != null)
                 {
-                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                    {
-                        MetamaskDispatcher(data!["walletAddress"]);
-                    });
+                    WalletDispatcher(data.WalletAddress);
                 }
                 
-                _socketClient.Off($"metamask/{nonce}");
+                _socketClient.Off($"login/{nonce}");
             });
 
 #if UNITY_WEBGL
             /*
              * TODO
-             * integrate with the web3 inside the webgl player
+             * integrate with the web3 inside the webgl player ?
              */
 #else
             Application.OpenURL(GetApplicationUri(nonce));
@@ -134,7 +120,7 @@ namespace ChainEngineSDK
             return await _playerService.GetNFT(id);
         }
 
-        private async void MetamaskDispatcher(string walletAddress)
+        private async void WalletDispatcher(string walletAddress)
         {
             _player = await _playerService.CreateOrFetch(walletAddress);
                     
@@ -143,13 +129,46 @@ namespace ChainEngineSDK
         
         private string GetApplicationUri(string nonce)
         {
-            var uri = new Uri($"{DataSourceApi.UiURL}/metamask/{nonce}");
+            var uri = new Uri($"{DataSourceApi.UiURL}/auth/{nonce}");
             
 #if UNITY_ANDROID || UNITY_IOS
-            uri = new Uri($"https://metamask.app.link/dapp/{uri.Host + uri.Port + uri.PathAndQuery}");
+            /*
+             * MetaMask Deep Link is broken :/
+             * https://github.com/MetaMask/metamask-mobile/issues/3855
+             */
+            // uri = new Uri($"https://metamask.app.link/dapp/{uri.Host + uri.PathAndQuery}");
+            
+            /*
+             * Workaround
+             * https://github.com/MetaMask/metamask-mobile/issues/3965#issuecomment-1122505112
+             */
+            uri = new Uri($"dapp://{uri.Host + uri.PathAndQuery}");
 #endif
 
             return uri.ToString();
         }
+        
+        private static bool Exists() {
+            return _instance != null;
+        }
+
+        private static bool VerifyGameId()
+        {
+            return _instance!.GameId != "";
+        }
+        
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            UnityEditor.SceneManagement.PrefabStage prefabStage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
+            bool isValidPrefabStage = prefabStage != null && prefabStage.stageHandle.IsValid();
+            bool prefabConnected = PrefabUtility.GetPrefabInstanceStatus(this.gameObject) == PrefabInstanceStatus.Connected;
+            
+            if (!isValidPrefabStage && prefabConnected && string.IsNullOrWhiteSpace(GameId))
+            {
+                Debug.LogError("Setup your ChainEngineSDK Game Id before running.");
+            }
+        }
+#endif
     }
 }

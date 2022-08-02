@@ -20,5 +20,7 @@ namespace ChainEngineSDK.Interfaces
          * Developer should be able to fetch an specific NFT.
          */
         public UniTask<Nft> GetNFT(string chainId);
+        
+        public UniTask<string> GetNonce();
     } 
 }

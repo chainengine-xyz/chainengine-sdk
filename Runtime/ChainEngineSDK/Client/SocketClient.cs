@@ -2,6 +2,7 @@ using System;
 using SocketIOClient;
 using SocketIOClient.Newtonsoft.Json;
 using ChainEngineSDK.Remote.Datasource;
+using UnityEngine;
 
 namespace ChainEngineSDK.Client
 {
@@ -9,7 +10,7 @@ namespace ChainEngineSDK.Client
     {
         public static SocketIOUnity Build(string _namespace)
         {
-            var uri = new Uri($"{DataSourceApi.ServerURL}/${_namespace}");
+            var uri = new Uri($"{DataSourceApi.ServerURL}/{_namespace}");
             
             var _socket = new SocketIOUnity(uri, new SocketIOOptions
             {
@@ -17,7 +18,7 @@ namespace ChainEngineSDK.Client
             });
             
             _socket.JsonSerializer = new NewtonsoftJsonSerializer();
-            
+
             _socket.Connect();
 
             return _socket;

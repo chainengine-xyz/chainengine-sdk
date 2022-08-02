@@ -74,6 +74,24 @@ namespace ChainEngineSDK.Remote.Datasource
                 throw new UnableToLoadNFTs(exception.Message, exception);
             }
         }
+        
+        public async UniTask<string> GetNonce()
+        {
+            try
+            {
+                var req = await SendRequest($"/auth/nonce/{_apiClient.GameId}", "POST");
+                
+                var nonce = Newtonsoft.Json.JsonConvert.DeserializeObject<NonceResponse>(req.downloadHandler.text);
+                
+                if (nonce == null) throw new Exception("Invalid response from api");
+
+                return nonce.Nonce;
+            }
+            catch (Exception exception)
+            {
+                throw new PlayerNotCreated(exception.Message, exception);
+            }
+        }
 
         private async UniTask<UnityWebRequest> SendRequest(string url, string method, [CanBeNull] byte[] encodedData = null)
         {

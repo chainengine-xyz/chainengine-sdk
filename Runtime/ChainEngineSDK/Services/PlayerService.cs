@@ -36,5 +36,10 @@ namespace ChainEngineSDK.Services
         {
             return _dataSource.GetPlayerNFT(id);
         }
+        
+        public UniTask<string> GetNonce()
+        {
+            return _dataSource.GetNonce();
+        }
     }
 }
