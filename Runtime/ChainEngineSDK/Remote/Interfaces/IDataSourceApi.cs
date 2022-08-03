@@ -21,5 +21,6 @@ namespace ChainEngineSDK.Remote.Interfaces
          */
         public UniTask<Nft> GetPlayerNFT(string id);
 
+        public UniTask<string> GetNonce();
     }
 }
