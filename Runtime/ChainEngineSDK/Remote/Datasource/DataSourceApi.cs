@@ -12,8 +12,11 @@ namespace ChainEngineSDK.Remote.Datasource
 {
     public class DataSourceApi: IDataSourceApi
     {
-        public static readonly string ServerURL = "https://api.chainengine.xyz";
-        public static readonly string UiURL = "https://console.chainengine.xyz";
+        // public static readonly string ServerURL = "https://api.chainengine.xyz";
+        // public static readonly string UiURL = "https://console.chainengine.xyz";
+        
+        public static readonly string ServerURL = "http://localhost:3000";
+        public static readonly string UiURL = "http://localhost:80";
 
         private readonly ChainEngineClient _apiClient;
 
@@ -79,13 +82,20 @@ namespace ChainEngineSDK.Remote.Datasource
         {
             try
             {
-                var req = await SendRequest($"/auth/nonce/{_apiClient.GameId}", "POST");
+                var nonce = new NonceRequest{
+                    GameId = _apiClient.GameId
+                };
+                var json = Newtonsoft.Json.JsonConvert.SerializeObject(nonce);
                 
-                var nonce = Newtonsoft.Json.JsonConvert.DeserializeObject<NonceResponse>(req.downloadHandler.text);
+                var jsonEncoded = new System.Text.UTF8Encoding().GetBytes(json);
                 
-                if (nonce == null) throw new Exception("Invalid response from api");
+                var req = await SendRequest("/clientapp/auth", "POST", jsonEncoded);
+                
+                var data = Newtonsoft.Json.JsonConvert.DeserializeObject<NonceResponse>(req.downloadHandler.text);
+                
+                if (data == null) throw new Exception("Invalid response from api");
 
-                return nonce.Nonce;
+                return data.Nonce;
             }
             catch (Exception exception)
             {
