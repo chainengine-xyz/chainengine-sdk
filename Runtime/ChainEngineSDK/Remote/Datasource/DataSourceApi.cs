@@ -12,11 +12,8 @@ namespace ChainEngineSDK.Remote.Datasource
 {
     public class DataSourceApi: IDataSourceApi
     {
-        // public static readonly string ServerURL = "https://api.chainengine.xyz";
-        // public static readonly string UiURL = "https://console.chainengine.xyz";
-        
-        public static readonly string ServerURL = "http://localhost:3000";
-        public static readonly string UiURL = "http://localhost:80";
+        public static readonly string ServerURL = "https://api.chainengine.xyz";
+        public static readonly string UiURL = "https://console.chainengine.xyz";
 
         private readonly ChainEngineClient _apiClient;
 
