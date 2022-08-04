@@ -79,13 +79,20 @@ namespace ChainEngineSDK.Remote.Datasource
         {
             try
             {
-                var req = await SendRequest($"/auth/nonce/{_apiClient.GameId}", "POST");
+                var nonce = new NonceRequest{
+                    GameId = _apiClient.GameId
+                };
+                var json = Newtonsoft.Json.JsonConvert.SerializeObject(nonce);
                 
-                var nonce = Newtonsoft.Json.JsonConvert.DeserializeObject<NonceResponse>(req.downloadHandler.text);
+                var jsonEncoded = new System.Text.UTF8Encoding().GetBytes(json);
                 
-                if (nonce == null) throw new Exception("Invalid response from api");
+                var req = await SendRequest("/clientapp/auth", "POST", jsonEncoded);
+                
+                var data = Newtonsoft.Json.JsonConvert.DeserializeObject<NonceResponse>(req.downloadHandler.text);
+                
+                if (data == null) throw new Exception("Invalid response from api");
 
-                return nonce.Nonce;
+                return data.Nonce;
             }
             catch (Exception exception)
             {

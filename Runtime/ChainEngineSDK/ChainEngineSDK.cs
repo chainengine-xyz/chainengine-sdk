@@ -129,7 +129,7 @@ namespace ChainEngineSDK
         
         private string GetApplicationUri(string nonce)
         {
-            var uri = new Uri($"{DataSourceApi.UiURL}/auth/{nonce}");
+            var uri = new Uri($"{DataSourceApi.UiURL}/wallet-authentication/{nonce}");
             
 #if UNITY_ANDROID || UNITY_IOS
             /*
