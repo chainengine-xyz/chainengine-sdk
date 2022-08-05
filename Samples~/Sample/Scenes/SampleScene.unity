@@ -559,6 +559,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1367508487728824107, guid: afa4e2d513708415a9eaed1137f2efa4, type: 3}
+      propertyPath: _gameId
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5344048739502815857, guid: afa4e2d513708415a9eaed1137f2efa4, type: 3}
       propertyPath: m_Name
       value: ChainEngineSDK

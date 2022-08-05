@@ -21,7 +21,7 @@ namespace ChainEngineSDK
         private static ChainEngineClient _instance;
         private PlayerService _playerService;
         private SocketIOUnity _socketClient;
-        private bool _isProdMode;
+        private bool _isProdMode = false;
         private Player _player;
 
         [SerializeField]

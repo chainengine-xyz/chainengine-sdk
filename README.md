@@ -113,6 +113,39 @@ Returns:
 var nfts = await client.GetPlayerNFTs()
 ```
 
+### SetApiMode
+Sets the api mode to run on MainNet or TestNet.
+
+Parameters:
+- mode: a boolean to set the api mode MainNet or TestNet.
+
+```csharp
+    public void SetApiModeFalsy()
+    {
+        // Set api to run on TestNet
+        client.SetApiMode(false);
+        Debug.Log($"SDK API Mode {client.ApiMode}");
+    }
+
+    public void SetApiModeTruly()
+    {
+        // Set api to run on MainNet
+        client.SetApiMode(true);
+        Debug.Log($"SDK API Mode {client.ApiMode}");
+    }
+```
+
+### SwitchApiMode
+Switch the API current mode.
+
+```csharp
+    public void SwitchApiMode()
+    {
+        client.SwitchApiMode();
+        Debug.Log($"SDK API Mode {client.ApiMode}");
+    }
+```
+
 ## Todo
 
 - [ ] Add authentication section to documentation

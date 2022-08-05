@@ -52,7 +52,7 @@ public class ChainEngineTest : MonoBehaviour
                   $"walletAddress {player.WalletAddress}");
     }
 
-    public void MetamaskLogin()
+    public void WalletLogin()
     {
         client.WalletLogin();
     }
