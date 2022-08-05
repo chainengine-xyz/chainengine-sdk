@@ -13,5 +13,12 @@
     "name": "ChainEngine",
     "email": "contact@chainengine.xyz",
     "url": "https://chainengine.xyz"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "Example Scene",
+      "description": "Contains sample scene using the ChainEngineSDK",
+      "path": "Samples~/Sample"
+    }
+  ]
 }
