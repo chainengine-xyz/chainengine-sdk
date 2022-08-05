@@ -5,6 +5,6 @@ namespace ChainEngineSDK.Actions
 {
     public static class ChainEngineActions
     {
-        public static Action<Player> OnReceiveMetamaskPlayer;
+        public static Action<Player> OnReceivePlayerWallet;
     }
 }

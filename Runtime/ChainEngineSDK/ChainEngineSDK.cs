@@ -21,7 +21,7 @@ namespace ChainEngineSDK
         private static ChainEngineClient _instance;
         private PlayerService _playerService;
         private SocketIOUnity _socketClient;
-        private bool _isProdMode;
+        private bool _isProdMode = false;
         private Player _player;
 
         [SerializeField]
@@ -124,7 +124,7 @@ namespace ChainEngineSDK
         {
             _player = await _playerService.CreateOrFetch(walletAddress);
                     
-            ChainEngineActions.OnReceiveMetamaskPlayer?.Invoke(_player);
+            ChainEngineActions.OnReceivePlayerWallet?.Invoke(_player);
         }
         
         private string GetApplicationUri(string nonce)
