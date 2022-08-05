@@ -13,11 +13,11 @@ public class ChainEngineTest : MonoBehaviour
     }
 
     private void OnEnable() {
-        ChainEngineActions.OnReceiveMetamaskPlayer += OnPlayerLoginWithWallet;
+        ChainEngineActions.OnReceivePlayerWallet += OnPlayerLoginWithWallet;
     }
     
     private void OnDisable() {
-        ChainEngineActions.OnReceiveMetamaskPlayer -= OnPlayerLoginWithWallet;
+        ChainEngineActions.OnReceivePlayerWallet -= OnPlayerLoginWithWallet;
     }
 
     public void SetApiModeFalsy()
