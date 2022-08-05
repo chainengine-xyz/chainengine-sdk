@@ -1,92 +1,159 @@
-# ChainEngine SDK
+# ChainEngine SDK Unity
 
-
-
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/chainengine/chainengine-sdk.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/chainengine/chainengine-sdk/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+ChainEngine SDK is a easy to use set of tools to enable game developers to quickly integrate their game to the Blockchain.
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+To install the API you can download this repository anywhere in your computer and link it to your Unity Project using the Package Manager window, selecting the "add from disk" option or "add package from git url":
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+![](https://images2.imgbox.com/cd/a7/Z8rtraUt_o.png)
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Once the SDK is imported you're ready to integrate your script to the SDK.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+![](https://i.imgur.com/q5DGkaq.png)
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## SDK Initialization
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Initializing the SDK should be as simples as adding an object into your scene.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+- drag the ChainEngineSDK prefab into your scene.
 
-## License
-For open source projects, say how it is licensed.
+![](https://images2.imgbox.com/6f/2f/iUacfe9I_o.png)
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- fill in the Game Id property
+
+![](https://images2.imgbox.com/c6/3f/mctim0zY_o.png)
+
+- now you can start using the ChainEngineSDK
+
+```csharp
+    private ChainEngineClient client;
+
+    private void Start()
+    {
+        client = ChainEngineClient.Instance();
+    }
+```
+
+*Note*: SDK's methods are asynchronous, which means that the game developer should always call them from async noted methods.
+
+### CreateOrFetchPlayer
+If you already knows the player wallet address you can use this method to create a player within ChainEngine
+
+Parameters:
+- walletAddress: Wallet address for the player wallet
+
+Returns:
+- An instance of Player.
+
+```csharp
+    public async void CreateOrFetchPlayer()
+    {
+        const string walletAddress = "0x92c762Bb5f8b2468965110AB2969CBc2b0D3806D";
+
+        Player player = await client.CreateOrFetchPlayer(walletAddress);
+        
+        Debug.Log("Player: " +
+                  $"gameId {player.GameId}\n" +
+                  $"apiKey {player.APIKey}\n" +
+                  $"walletAddress {player.WalletAddress}");
+    }
+```
+
+### WalletLogin
+If you want to authenticate the player using his wallet you can use this method. Right now ChainEngineSDK supports MetaMask, Coinbase and WalletConnect.
+
+Returns:
+- void
+
+Important:
+- as we don't know how long the player will take to authenticate you should subscribe to the action `ChainEngineActions.OnReceivePlayerWallet`, this action once fired will return the authenticated player data.
+
+```csharp
+    private void OnEnable() {
+        ChainEngineActions.OnReceivePlayerWallet += OnPlayerLoginWithWallet;
+    }
+    
+    private void OnDisable() {
+        ChainEngineActions.OnReceivePlayerWallet -= OnPlayerLoginWithWallet;
+    }
+    
+    public void WalletLogin()
+    {
+        client.WalletLogin();
+    }
+
+    private void OnPlayerLoginWithWallet(Player player)
+    {
+        Debug.Log("Player: " +
+                  $"gameId {player.GameId}\n" +
+                  $"apiKey {player.APIKey}\n" +
+                  $"walletAddress {player.WalletAddress}");
+    }
+```
+
+### GetNFT
+
+Parameters:
+- Id: The id of the NFT as issued by ChainEngine during minting.
+
+Returns:
+- An instance of NFT.
+
+```csharp
+var nft = await client.GetNFT(id)
+```
+
+### GetPlayerNFTs
+
+Returns:
+- A instance of PlayerNftCollection containing a list of NFTs.
+
+```csharp
+var nfts = await client.GetPlayerNFTs()
+```
+
+### SetApiMode
+Sets the api mode to run on MainNet or TestNet.
+
+Parameters:
+- mode: a boolean to set the api mode MainNet or TestNet.
+
+```csharp
+    public void SetApiModeFalsy()
+    {
+        // Set api to run on TestNet
+        client.SetApiMode(false);
+        Debug.Log($"SDK API Mode {client.ApiMode}");
+    }
+
+    public void SetApiModeTruly()
+    {
+        // Set api to run on MainNet
+        client.SetApiMode(true);
+        Debug.Log($"SDK API Mode {client.ApiMode}");
+    }
+```
+
+### SwitchApiMode
+Switch the API current mode.
+
+```csharp
+    public void SwitchApiMode()
+    {
+        client.SwitchApiMode();
+        Debug.Log($"SDK API Mode {client.ApiMode}");
+    }
+```
+
+## Todo
+
+- [ ] Add authentication section to documentation
+
+## Known Issues
+
+### WebGL files not found while building in MacOS Monterrey
+
+Unity 2020.x depends on Python 2.7 to compile WebGL games. In the most recently OS updated, Apple removed support for Python 2.7.
+
+Follow this topic on how to solve this issue: [Unity 2020.3.28f1 webgl build failed on macos monterey 12.3](https://answers.unity.com/questions/1893841/unity-2020328f1-webgl-build-failed-on-macos-monter.html)

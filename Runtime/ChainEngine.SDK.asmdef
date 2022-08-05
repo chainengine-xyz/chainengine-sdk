@@ -1,0 +1,19 @@
+{
+    "name": "ChainEngine.SDK",
+    "rootNamespace": "./",
+    "references": [
+        "Nethereum",
+        "UniTask",
+        "WalletConnectSharp.Unity",
+        "SocketIOUnityAssembly"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
