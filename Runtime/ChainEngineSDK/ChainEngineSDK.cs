@@ -124,7 +124,7 @@ namespace ChainEngineSDK
         {
             _player = await _playerService.CreateOrFetch(walletAddress);
                     
-            ChainEngineActions.OnReceiveMetamaskPlayer?.Invoke(_player);
+            ChainEngineActions.OnReceivePlayerWallet?.Invoke(_player);
         }
         
         private string GetApplicationUri(string nonce)
