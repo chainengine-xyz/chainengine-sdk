@@ -23,12 +23,12 @@ namespace ChainEngineSDK.Client
             {
                 _socket.OnConnected += (sender, e) =>
                 {
-                    Debug.Log("Socket OnConnected");
+                    Debug.Log($"Socket OnConnected: {e}");
                 };
 
                 _socket.OnDisconnected += (sender, e) =>
                 {
-                    Debug.Log("Disconnect: " + e);
+                    Debug.Log($"Disconnect: {e}");
                 };
             
                 _socket.OnReconnectAttempt += (sender, e) =>
