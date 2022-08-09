@@ -29,6 +29,8 @@ namespace ChainEngineSDK
 
         void Awake() {
             if (_instance == null) {
+                Application.runInBackground = true;
+                
                 _instance = this;
             
                 _socketClient = SocketClient.Build("wallet");
@@ -93,7 +95,7 @@ namespace ChainEngineSDK
                     Debug.Log(data.Error);
                 } else if (data!.WalletAddress != null)
                 {
-                    WalletDispatcher(data.WalletAddress);
+                    WalletLoginDispatcher(data.WalletAddress);
                 }
                 
                 _socketClient.Off($"login/{nonce}");
@@ -120,11 +122,11 @@ namespace ChainEngineSDK
             return await _playerService.GetNFT(id);
         }
 
-        private async void WalletDispatcher(string walletAddress)
+        private async void WalletLoginDispatcher(string walletAddress)
         {
             _player = await _playerService.CreateOrFetch(walletAddress);
                     
-            ChainEngineActions.OnReceivePlayerWallet?.Invoke(_player);
+            ChainEngineActions.OnPlayerLoginWithWallet?.Invoke(_player);
         }
         
         private string GetApplicationUri(string nonce)
