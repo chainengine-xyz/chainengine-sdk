@@ -86,7 +86,7 @@ namespace ChainEngineSDK.Remote.Datasource
                 
                 var jsonEncoded = new System.Text.UTF8Encoding().GetBytes(json);
                 
-                var req = await SendRequest("/clientapp/auth", "POST", jsonEncoded);
+                var req = await SendRequest("/clientapp/auth/nonce", "POST", jsonEncoded);
                 
                 var data = Newtonsoft.Json.JsonConvert.DeserializeObject<NonceResponse>(req.downloadHandler.text);
                 

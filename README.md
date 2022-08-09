@@ -1,20 +1,20 @@
-# ChainEngine SDK Unity
+# ChainEngine Unity SDK
 
 ChainEngine SDK is a easy to use set of tools to enable game developers to quickly integrate their game to the Blockchain.
 
 ## Installation
 
-To install the API you can download this repository anywhere in your computer and link it to your Unity Project using the Package Manager window, selecting the "add from disk" option or "add package from git url":
+To install the ChainEngine SDK you can link it to your Unity Project using the Package Manager window, selecting the "add package from git url" option:
 
 ![](https://images2.imgbox.com/cd/a7/Z8rtraUt_o.png)
 
-Once the SDK is imported you're ready to integrate your script to the SDK.
+Once the SDK is imported you're ready to integrate your scripts with the SDK.
 
 ![](https://i.imgur.com/q5DGkaq.png)
 
 ## SDK Initialization
 
-Initializing the SDK should be as simples as adding an object into your scene.
+Initializing the SDK client should be as simples as adding an object into your scene.
 
 - drag the ChainEngineSDK prefab into your scene.
 
@@ -63,19 +63,16 @@ Returns:
 ### WalletLogin
 If you want to authenticate the player using his wallet you can use this method. Right now ChainEngineSDK supports MetaMask, Coinbase and WalletConnect.
 
-Returns:
-- void
-
 Important:
-- as we don't know how long the player will take to authenticate you should subscribe to the action `ChainEngineActions.OnReceivePlayerWallet`, this action once fired will return the authenticated player data.
+- as we don't know how long the player will take to authenticate you should subscribe to the action `ChainEngineActions.OnPlayerLoginWithWallet`, this action once fired will return the authenticated player data.
 
 ```csharp
     private void OnEnable() {
-        ChainEngineActions.OnReceivePlayerWallet += OnPlayerLoginWithWallet;
+        ChainEngineActions.OnPlayerLoginWithWallet += OnPlayerLoginWithWallet;
     }
     
     private void OnDisable() {
-        ChainEngineActions.OnReceivePlayerWallet -= OnPlayerLoginWithWallet;
+        ChainEngineActions.OnPlayerLoginWithWallet -= OnPlayerLoginWithWallet;
     }
     
     public void WalletLogin()
