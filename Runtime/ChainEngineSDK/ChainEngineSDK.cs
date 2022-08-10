@@ -159,7 +159,7 @@ namespace ChainEngineSDK
 #endif
                     break;
                 default:
-                    Debug.LogWarning("On mobile builds you need to specify a WalletProvider so the player can authenticate using an specific wallet");
+                    Debug.LogWarning("On mobile builds you may want to specify a WalletProvider so the player can authenticate using an specific wallet app.");
                     break;
             }
 #endif
