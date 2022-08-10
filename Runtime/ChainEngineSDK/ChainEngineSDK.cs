@@ -1,11 +1,13 @@
-using System;
+using ChainEngineSDK.Remote.Datasource;
+using ChainEngineSDK.Services;
 using ChainEngineSDK.Actions;
 using ChainEngineSDK.Client;
-using Cysharp.Threading.Tasks;
-using ChainEngineSDK.Services;
 using ChainEngineSDK.Model;
-using ChainEngineSDK.Remote.Datasource;
+using ChainEngineSDK.Types;
+using Cysharp.Threading.Tasks;
+using UnityEngine.Networking;
 using UnityEngine;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -82,7 +84,7 @@ namespace ChainEngineSDK
             return _player;
         }
 
-        public async void WalletLogin()
+        public async void WalletLogin(WalletProvider wallet = WalletProvider.Browser)
         {
             var nonce = await _playerService.GetNonce();
             
@@ -101,14 +103,7 @@ namespace ChainEngineSDK
                 _socketClient.Off($"login/{nonce}");
             });
 
-#if UNITY_WEBGL
-            /*
-             * TODO
-             * integrate with the web3 inside the webgl player ?
-             */
-#else
-            Application.OpenURL(GetApplicationUri(nonce));
-#endif
+            Application.OpenURL(GetApplicationUri(nonce, wallet));
         }
 
         public async UniTask<PlayerNftCollection> GetPlayerNFTs(int page = 1, int limit = 10)
@@ -129,24 +124,46 @@ namespace ChainEngineSDK
             ChainEngineActions.OnPlayerLoginWithWallet?.Invoke(_player);
         }
         
-        private string GetApplicationUri(string nonce)
+        private string GetApplicationUri(string nonce, WalletProvider wallet)
         {
             var uri = new Uri($"{DataSourceApi.UiURL}/wallet-authentication/{nonce}");
             
 #if UNITY_ANDROID || UNITY_IOS
-            /*
-             * MetaMask Deep Link is broken :/
-             * https://github.com/MetaMask/metamask-mobile/issues/3855
-             */
-            // uri = new Uri($"https://metamask.app.link/dapp/{uri.Host + uri.PathAndQuery}");
+            switch(wallet) 
+            {
+                case WalletProvider.TrustWallet:
+                    var polygonChainId = 137;
+                    
+                    uri = new Uri($"https://link.trustwallet.com/open_url?coin_id={polygonChainId}&url={uri}");
+                    
+                    break;
+                case WalletProvider.Metamask:
+                    /*
+                     * MetaMask Deep Link is broken :/
+                     * https://github.com/MetaMask/metamask-mobile/issues/3855
+                     */
+                    // uri = new Uri($"https://metamask.app.link/dapp/{uri.Host + uri.PathAndQuery}");
             
-            /*
-             * Workaround
-             * https://github.com/MetaMask/metamask-mobile/issues/3965#issuecomment-1122505112
-             */
-            uri = new Uri($"dapp://{uri.Host + uri.PathAndQuery}");
+                    /*
+                     * Workaround
+                     * https://github.com/MetaMask/metamask-mobile/issues/3965#issuecomment-1122505112
+                     */
+                    uri = new Uri($"dapp://{uri.Host + uri.PathAndQuery}");
+                    
+                    break;
+                case WalletProvider.Coinbase:
+#if UNITY_ANDROID
+                    uri = new Uri($"https://go.cb-w.com/dapp?cb_url={UnityWebRequest.EscapeURL(uri.ToString())}");
+#else
+                    uri = new Uri($"cbwallet://dapp?url={UnityWebRequest.EscapeURL(uri.ToString())}");
 #endif
-
+                    break;
+                default:
+                    Debug.LogWarning("On mobile builds you need to specify a WalletProvider so the player can authenticate using an specific wallet");
+                    break;
+            }
+#endif
+            
             return uri.ToString();
         }
         

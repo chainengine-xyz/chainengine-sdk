@@ -16,9 +16,9 @@
   },
   "samples": [
     {
-      "displayName": "Example Scene",
-      "description": "Contains sample scene using the ChainEngineSDK",
-      "path": "Samples~/Sample"
+      "displayName": "Basic Sample",
+      "description": "Contains a basic sample scene showing the ChainEngine SDK features.",
+      "path": "Samples~/BasicSample"
     }
   ]
 }

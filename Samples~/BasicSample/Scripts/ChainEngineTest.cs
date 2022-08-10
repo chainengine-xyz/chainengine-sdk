@@ -1,5 +1,6 @@
 using ChainEngineSDK.Actions;
 using ChainEngineSDK.Model;
+using ChainEngineSDK.Types;
 using ChainEngineSDK;
 using UnityEngine;
 
@@ -55,6 +56,21 @@ public class ChainEngineTest : MonoBehaviour
     public void WalletLogin()
     {
         client.WalletLogin();
+    }
+    
+    public void TrustWalletLogin()
+    {
+        client.WalletLogin(WalletProvider.TrustWallet);
+    }
+    
+    public void MetamaskLogin()
+    {
+        client.WalletLogin(WalletProvider.Metamask);
+    }
+
+    public void CoinbaseLogin()
+    {
+        client.WalletLogin(WalletProvider.Coinbase);
     }
 
     private void OnPlayerLoginWithWallet(Player player)
