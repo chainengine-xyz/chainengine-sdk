@@ -1,22 +1,22 @@
-using ChainEngineSDK.Actions;
-using ChainEngineSDK.Model;
-using ChainEngineSDK.Types;
-using ChainEngineSDK;
+using ChainEngine.Actions;
+using ChainEngine.Model;
+using ChainEngine.Types;
+using ChainEngine;
 using UnityEngine;
 
 public class ChainEngineTest : MonoBehaviour
 {
-    private ChainEngineClient client;
+    private ChainEngineSDK client;
 
     private void Start()
     {
-        client = ChainEngineClient.Instance();
+        client = ChainEngineSDK.Instance();
     }
 
     private void OnEnable() {
         ChainEngineActions.OnPlayerLoginWithWallet += OnPlayerLoginWithWallet;
     }
-    
+
     private void OnDisable() {
         ChainEngineActions.OnPlayerLoginWithWallet -= OnPlayerLoginWithWallet;
     }
@@ -24,20 +24,20 @@ public class ChainEngineTest : MonoBehaviour
     public void SetApiModeFalsy()
     {
         client.SetApiMode(false);
-        
+
         Debug.Log($"SDK API Mode {client.ApiMode}");
     }
 
     public void SetApiModeTruly()
     {
         client.SetApiMode(true);
-        
+
         Debug.Log($"SDK API Mode {client.ApiMode}");
     }
     public void SwitchApiMode()
     {
         client.SwitchApiMode();
-        
+
         Debug.Log($"SDK API Mode {client.ApiMode}");
     }
 
@@ -46,7 +46,7 @@ public class ChainEngineTest : MonoBehaviour
         const string walletAddress = "0xBd11AB64a50665B52c721e05a2B2342d0299601f";
 
         Player player = await client.CreateOrFetchPlayer(walletAddress);
-        
+
         Debug.Log("Player: " +
                   $"gameId {player.GameId}\n" +
                   $"apiKey {player.APIKey}\n" +
@@ -57,12 +57,12 @@ public class ChainEngineTest : MonoBehaviour
     {
         client.WalletLogin();
     }
-    
+
     public void TrustWalletLogin()
     {
         client.WalletLogin(WalletProvider.TrustWallet);
     }
-    
+
     public void MetamaskLogin()
     {
         client.WalletLogin(WalletProvider.Metamask);
