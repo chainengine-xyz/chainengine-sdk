@@ -8,9 +8,11 @@ To install the ChainEngine SDK you can link it to your Unity Project using the P
 
 ![](https://images2.imgbox.com/cd/a7/Z8rtraUt_o.png)
 
-Once the SDK is imported you're ready to integrate your scripts with the SDK.
+Once the SDK is imported you're ready to integrate your scripts with our SDK. You can also import our basic sample where we show the usage of the ChainEngine's SDK.
 
-![](https://i.imgur.com/q5DGkaq.png)
+![](https://images2.imgbox.com/92/30/TppP6YHt_o.png)
+
+To import our sample you just need to the Package Manager window, find the ChainEngine's SDK package and under the samples tab (may vary due the Unity's version) and import it.
 
 ## SDK Initialization
 
