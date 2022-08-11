@@ -12,7 +12,7 @@ Once the SDK is imported you're ready to integrate your scripts with our SDK. Yo
 
 ![](https://images2.imgbox.com/92/30/TppP6YHt_o.png)
 
-To import our sample you just need to the Package Manager window, find the ChainEngine's SDK package and under the samples tab (may vary due the Unity's version) and import it.
+To import our sample you just need to open the Package Manager window, find the ChainEngine's SDK package, and under the samples tab (which may vary due to Unity's version) and import it.
 
 ## SDK Initialization
 
