@@ -16,7 +16,7 @@ Once the SDK is imported you're ready to integrate your scripts with the SDK.
 
 Initializing the SDK client should be as simples as adding an object into your scene.
 
-- drag the ChainEngineSDK prefab into your scene.
+- drag the ChainEngine prefab into your scene.
 
 ![](https://images2.imgbox.com/6f/2f/iUacfe9I_o.png)
 
@@ -24,14 +24,14 @@ Initializing the SDK client should be as simples as adding an object into your s
 
 ![](https://images2.imgbox.com/c6/3f/mctim0zY_o.png)
 
-- now you can start using the ChainEngineSDK
+- now you can start using the ChainEngine
 
 ```csharp
-    private ChainEngineClient client;
+    private ChainEngineSDK client;
 
     private void Start()
     {
-        client = ChainEngineClient.Instance();
+        client = ChainEngineSDK.Instance();
     }
 ```
 
@@ -52,7 +52,7 @@ Returns:
         const string walletAddress = "0x92c762Bb5f8b2468965110AB2969CBc2b0D3806D";
 
         Player player = await client.CreateOrFetchPlayer(walletAddress);
-        
+
         Debug.Log("Player: " +
                   $"gameId {player.GameId}\n" +
                   $"apiKey {player.APIKey}\n" +
@@ -61,7 +61,7 @@ Returns:
 ```
 
 ### WalletLogin
-If you want to authenticate the player using his wallet you can use this method. Right now ChainEngineSDK supports MetaMask, Coinbase and WalletConnect.
+If you want to authenticate the player using his wallet you can use this method. Right now ChainEngine supports MetaMask, Coinbase and WalletConnect.
 
 Important:
 - as we don't know how long the player will take to authenticate you should subscribe to the action `ChainEngineActions.OnPlayerLoginWithWallet`, this action once fired will return the authenticated player data.
@@ -70,11 +70,11 @@ Important:
     private void OnEnable() {
         ChainEngineActions.OnPlayerLoginWithWallet += OnPlayerLoginWithWallet;
     }
-    
+
     private void OnDisable() {
         ChainEngineActions.OnPlayerLoginWithWallet -= OnPlayerLoginWithWallet;
     }
-    
+
     public void WalletLogin()
     {
         client.WalletLogin();
