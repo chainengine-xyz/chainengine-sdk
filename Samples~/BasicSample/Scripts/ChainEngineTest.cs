@@ -1,3 +1,4 @@
+using ChainEngine.Shared.Exceptions;
 using ChainEngine.Actions;
 using ChainEngine.Model;
 using ChainEngine.Types;
@@ -14,36 +15,18 @@ public class ChainEngineTest : MonoBehaviour
     }
 
     private void OnEnable() {
-        ChainEngineActions.OnPlayerLoginWithWallet += OnPlayerLoginWithWallet;
+        ChainEngineActions.OnWalletAuthSuccess += OnWalletAuthSuccess;
+        ChainEngineActions.OnWalletAuthFailure += OnWalletAuthFailure;
     }
 
     private void OnDisable() {
-        ChainEngineActions.OnPlayerLoginWithWallet -= OnPlayerLoginWithWallet;
-    }
-
-    public void SetApiModeFalsy()
-    {
-        client.SetApiMode(false);
-
-        Debug.Log($"SDK API Mode {client.ApiMode}");
-    }
-
-    public void SetApiModeTruly()
-    {
-        client.SetApiMode(true);
-
-        Debug.Log($"SDK API Mode {client.ApiMode}");
-    }
-    public void SwitchApiMode()
-    {
-        client.SwitchApiMode();
-
-        Debug.Log($"SDK API Mode {client.ApiMode}");
+        ChainEngineActions.OnWalletAuthSuccess -= OnWalletAuthSuccess;
+        ChainEngineActions.OnWalletAuthFailure -= OnWalletAuthFailure;
     }
 
     public async void CreateOrFetchPlayer()
     {
-        const string walletAddress = "0xBd11AB64a50665B52c721e05a2B2342d0299601f";
+        const string walletAddress = "0xb86d5053eE5260B6A4AFc2D65f485f468B635e80";
 
         Player player = await client.CreateOrFetchPlayer(walletAddress);
 
@@ -73,11 +56,47 @@ public class ChainEngineTest : MonoBehaviour
         client.WalletLogin(WalletProvider.Coinbase);
     }
 
-    private void OnPlayerLoginWithWallet(Player player)
+    public async void GetPlayerNFTs()
+    {
+        var nfts = await client.GetPlayerNFTs();
+
+        foreach (var nft in nfts.Items())
+        {
+            Debug.Log($"NFT: {nft.Metadata.Name}\nCain ID: {nft.OnChainId}\nID: {nft.Id}");
+        }
+    }
+
+    public async void GetNFT()
+    {
+        var nft = await client.GetNFT("fbf72fb5-377f-418f-be76-52854d1a8e47");
+        
+        Debug.Log($"NFT: {nft.Metadata.Name}\nCain ID: {nft.OnChainId}\nID: {nft.Id}");
+    }
+    
+    public void SetTestNetMode()
+    {
+        client.SetTestNetMode();
+
+        Debug.Log($"SDK API Mode {client.ApiMode}");
+    }
+
+    public void SetMainNetMode()
+    {
+        client.SetMainNetMode();
+
+        Debug.Log($"SDK API Mode {client.ApiMode}");
+    }
+
+    private void OnWalletAuthSuccess(Player player)
     {
         Debug.Log("Player: " +
                   $"gameId {player.GameId}\n" +
                   $"apiKey {player.APIKey}\n" +
                   $"walletAddress {player.WalletAddress}");
+    }
+
+    private void OnWalletAuthFailure(WalletAuthenticationError error)
+    {
+        Debug.Log(error);
     }
 }
