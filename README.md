@@ -91,7 +91,7 @@ Important:
                   $"apiKey {player.APIKey}\n" +
                   $"walletAddress {player.WalletAddress}");
     }
-    
+
     private void OnWalletAuthFailure(WalletAuthenticationError error)
     {
         Debug.Log(error);
@@ -107,7 +107,12 @@ Returns:
 - An instance of NFT.
 
 ```csharp
-var nft = await client.GetNFT(id)
+public async void GetNFT()
+{
+    var nft = await client.GetNFT(id);
+
+    Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
+}
 ```
 
 ### GetPlayerNFTs
@@ -116,38 +121,30 @@ Returns:
 - A instance of PlayerNftCollection containing a list of NFTs.
 
 ```csharp
-var nfts = await client.GetPlayerNFTs()
+public async void GetPlayerNFTs()
+{
+    var nfts = await client.GetPlayerNFTs();
+
+    foreach (var nft in nfts.Items())
+    {
+        Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
+    }
+}
 ```
 
 ### SetApiMode
-Sets the api mode to run on MainNet or TestNet.
-
-Parameters:
-- mode: a boolean to set the api mode MainNet or TestNet.
+Sets the api mode to run on TestNet or MainNet. TestNet is the default value, make sure to change it to MainNet on production builds.
 
 ```csharp
-    public void SetApiModeFalsy()
+    public void SetTestNetMode()
     {
-        // Set api to run on TestNet
-        client.SetApiMode(false);
+        client.SetTestNetMode();
         Debug.Log($"SDK API Mode {client.ApiMode}");
     }
 
-    public void SetApiModeTruly()
+    public void SetMainNetMode()
     {
-        // Set api to run on MainNet
-        client.SetApiMode(true);
-        Debug.Log($"SDK API Mode {client.ApiMode}");
-    }
-```
-
-### SwitchApiMode
-Switch the API current mode.
-
-```csharp
-    public void SwitchApiMode()
-    {
-        client.SwitchApiMode();
+        client.SetMainNetMode(true);
         Debug.Log($"SDK API Mode {client.ApiMode}");
     }
 ```
