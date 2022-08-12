@@ -62,7 +62,7 @@ public class ChainEngineTest : MonoBehaviour
 
         foreach (var nft in nfts.Items())
         {
-            Debug.Log($"NFT: {nft.Metadata.Name}\nCain ID: {nft.OnChainId}\nID: {nft.Id}");
+            Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
         }
     }
 
@@ -70,7 +70,7 @@ public class ChainEngineTest : MonoBehaviour
     {
         var nft = await client.GetNFT("fbf72fb5-377f-418f-be76-52854d1a8e47");
         
-        Debug.Log($"NFT: {nft.Metadata.Name}\nCain ID: {nft.OnChainId}\nID: {nft.Id}");
+        Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
     }
     
     public void SetTestNetMode()
