@@ -1,4 +1,5 @@
 using ChainEngine.Remote.Datasource;
+using ChainEngine.Shared.Exceptions;
 using ChainEngine.Services;
 using ChainEngine.Actions;
 using ChainEngine.Client;
@@ -22,6 +23,7 @@ namespace ChainEngine
         private static ChainEngineSDK _instance;
         private PlayerService _playerService;
         private SocketIOUnity _socketClient;
+        private bool _alreadyWarned;
         private bool _isProdMode;
         private Player _player;
 
@@ -64,20 +66,19 @@ namespace ChainEngine
 
         public string ApiMode => _isProdMode ? ACCOUNT_MODE_PROD : ACCOUNT_MODE_TEST;
 
-        public void SetApiMode(bool mode)
+        public void SetTestNetMode()
         {
-            _isProdMode = mode;
+            _isProdMode = false;
         }
-
-        public bool SwitchApiMode()
+        
+        public void SetMainNetMode()
         {
-            _isProdMode = !_isProdMode;
-
-            return _isProdMode;
+            _isProdMode = true;
         }
 
         public async UniTask<Player> CreateOrFetchPlayer(string walletAddress)
         {
+            TestNetWarning();
             _player = await _playerService.CreateOrFetch(walletAddress);
 
             return _player;
@@ -85,6 +86,7 @@ namespace ChainEngine
 
         public async void WalletLogin(WalletProvider wallet = WalletProvider.Browser)
         {
+            TestNetWarning();
             var nonce = await _playerService.GetNonce();
 
             _socketClient.OnUnityThread($"login/{nonce}", (response) =>
@@ -93,7 +95,7 @@ namespace ChainEngine
 
                 if (data!.Error != null)
                 {
-                    Debug.Log(data.Error);
+                    ChainEngineActions.OnWalletAuthFailure?.Invoke(new WalletAuthenticationError(data.Error));
                 } else if (data!.WalletAddress != null)
                 {
                     WalletLoginDispatcher(data.WalletAddress);
@@ -107,20 +109,30 @@ namespace ChainEngine
 
         public async UniTask<PlayerNftCollection> GetPlayerNFTs(int page = 1, int limit = 10)
         {
+            TestNetWarning();
             var collection = new PlayerNftCollection(limit, page, _playerService);
             return await collection.FirstPage();
         }
 
         public async UniTask<Nft> GetNFT(string id)
         {
+            TestNetWarning();
             return await _playerService.GetNFT(id);
+        }
+
+        private void TestNetWarning()
+        {
+            if (_isProdMode || _alreadyWarned) return;
+            
+            _alreadyWarned = true;
+            Debug.LogWarning("ChainEngine's SDK is running on TestNet mode, make sure to switch over MainNet for production builds.");
         }
 
         private async void WalletLoginDispatcher(string walletAddress)
         {
             _player = await _playerService.CreateOrFetch(walletAddress);
 
-            ChainEngineActions.OnPlayerLoginWithWallet?.Invoke(_player);
+            ChainEngineActions.OnWalletAuthSuccess?.Invoke(_player);
         }
 
         private string GetApplicationUri(string nonce, WalletProvider wallet)

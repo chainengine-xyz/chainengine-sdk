@@ -66,15 +66,17 @@ Returns:
 If you want to authenticate the player using his wallet you can use this method. Right now ChainEngine supports MetaMask, Coinbase and WalletConnect.
 
 Important:
-- as we don't know how long the player will take to authenticate you should subscribe to the action `ChainEngineActions.OnPlayerLoginWithWallet`, this action once fired will return the authenticated player data.
+- as we don't know how long the player will take to authenticate you should subscribe to the actions `OnWalletAuthSuccess` and `OnWalletAuthFailure`, these actions once fired will return the authenticated player data and the authentication error message respectively.
 
 ```csharp
     private void OnEnable() {
-        ChainEngineActions.OnPlayerLoginWithWallet += OnPlayerLoginWithWallet;
+        ChainEngineActions.OnWalletAuthSuccess += OnWalletAuthSuccess;
+        ChainEngineActions.OnWalletAuthFailure += OnWalletAuthFailure;
     }
 
     private void OnDisable() {
-        ChainEngineActions.OnPlayerLoginWithWallet -= OnPlayerLoginWithWallet;
+        ChainEngineActions.OnWalletAuthSuccess -= OnWalletAuthSuccess;
+        ChainEngineActions.OnWalletAuthFailure -= OnWalletAuthFailure;
     }
 
     public void WalletLogin()
@@ -82,12 +84,17 @@ Important:
         client.WalletLogin();
     }
 
-    private void OnPlayerLoginWithWallet(Player player)
+    private void OnWalletAuthSuccess(Player player)
     {
         Debug.Log("Player: " +
                   $"gameId {player.GameId}\n" +
                   $"apiKey {player.APIKey}\n" +
                   $"walletAddress {player.WalletAddress}");
+    }
+    
+    private void OnWalletAuthFailure(WalletAuthenticationError error)
+    {
+        Debug.Log(error);
     }
 ```
 
