@@ -1,6 +1,6 @@
 # ChainEngine Unity SDK
 
-ChainEngine SDK is a easy to use set of tools to enable game developers to quickly integrate their game to the Blockchain.
+ChainEngine SDK is an easy to use set of tools to enable game developers to quickly integrate their game to the Blockchain. Here you can find our [Documentation](https://docs.chainengine.xyz/docs/integration#unity-sdk).
 
 ## Installation
 
@@ -62,11 +62,11 @@ Returns:
     }
 ```
 
-### WalletLogin
-If you want to authenticate the player using his wallet you can use this method. Right now ChainEngine supports MetaMask, Coinbase and WalletConnect.
+### Authentication
+If you want to authenticate the player using his wallet you can use this method. Right now ChainEngine supports MetaMask, Coinbase, Trust Wallet and WalletConnect.
 
 Important:
-- as we don't know how long the player will take to authenticate you should subscribe to the actions `OnWalletAuthSuccess` and `OnWalletAuthFailure`, these actions once fired will return the authenticated player data and the authentication error message respectively.
+- as we don't know how long the player will take to authenticate you should subscribe to the actions `OnWalletAuthSuccess` and `OnWalletAuthFailure`, these actions once fired will return the authenticated player data or the authentication error message respectively.
 
 ```csharp
     private void OnEnable() {
@@ -133,7 +133,7 @@ public async void GetPlayerNFTs()
 ```
 
 ### SetApiMode
-Sets the api mode to run on TestNet or MainNet. TestNet is the default value, make sure to change it to MainNet on production builds.
+Sets the api mode to run on TestNet or MainNet. As TestNet is the default one, make sure to change it to MainNet on production builds.
 
 ```csharp
     public void SetTestNetMode()
@@ -144,14 +144,10 @@ Sets the api mode to run on TestNet or MainNet. TestNet is the default value, ma
 
     public void SetMainNetMode()
     {
-        client.SetMainNetMode(true);
+        client.SetMainNetMode();
         Debug.Log($"SDK API Mode {client.ApiMode}");
     }
 ```
-
-## Todo
-
-- [ ] Add authentication section to documentation
 
 ## Known Issues
 
