@@ -6,6 +6,7 @@ using ChainEngine.Remote.Models;
 using ChainEngine.Shared.Exceptions;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace ChainEngine.Remote.Datasource
@@ -102,7 +103,7 @@ namespace ChainEngine.Remote.Datasource
 
         private async UniTask<UnityWebRequest> SendRequest(string url, string method, [CanBeNull] byte[] encodedData = null)
         {
-            var www = new ChainEngineWebClient(sdkClient.PlayerKey, ServerURL + url, method, sdkClient.ApiMode);
+            var www = new ChainEngineWebClient(sdkClient.Player?.Token, ServerURL + url, method, sdkClient.ApiMode);
 
             if (encodedData != null)
             {
