@@ -9,13 +9,13 @@ namespace ChainEngine.Client
     {
         private readonly UnityWebRequest _unityWebRequest;
 
-        public ChainEngineWebClient(string playerApiKey, string path, string method, [CanBeNull] string apiMode)
+        public ChainEngineWebClient(string token, string path, string method, [CanBeNull] string apiMode)
         {
             _unityWebRequest = new UnityWebRequest(path, method);
 
-            if (!string.IsNullOrEmpty(playerApiKey))
+            if (!string.IsNullOrEmpty(token))
             {
-                _unityWebRequest.SetRequestHeader("x-api-key", playerApiKey);
+                _unityWebRequest.SetRequestHeader("Authorization", $"Bearer {token}");
             }
 
             if (!string.IsNullOrEmpty(apiMode))

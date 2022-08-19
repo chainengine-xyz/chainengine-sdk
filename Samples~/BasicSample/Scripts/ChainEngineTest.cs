@@ -28,12 +28,11 @@ public class ChainEngineTest : MonoBehaviour
     {
         const string walletAddress = "0xb86d5053eE5260B6A4AFc2D65f485f468B635e80";
 
-        Player player = await client.CreateOrFetchPlayer(walletAddress);
+        await client.CreateOrFetchPlayer(walletAddress);
 
-        Debug.Log("Player: " +
-                  $"gameId {player.GameId}\n" +
-                  $"apiKey {player.APIKey}\n" +
-                  $"walletAddress {player.WalletAddress}");
+        Debug.Log("Player\n" +
+                  $"Game Id: {client.Player?.GameId}\n" +
+                  $"Wallet Address: {client.Player?.WalletAddress}");
     }
 
     public void WalletLogin()
@@ -62,7 +61,7 @@ public class ChainEngineTest : MonoBehaviour
 
         foreach (var nft in nfts.Items())
         {
-            Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
+            Debug.Log($"NFT: {nft.Metadata.Name}\nCain ID: {nft.OnChainId}\nID: {nft.Id}");
         }
     }
 
@@ -70,7 +69,7 @@ public class ChainEngineTest : MonoBehaviour
     {
         var nft = await client.GetNFT("fbf72fb5-377f-418f-be76-52854d1a8e47");
         
-        Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
+        Debug.Log($"NFT: {nft.Metadata.Name}\nCain ID: {nft.OnChainId}\nID: {nft.Id}");
     }
     
     public void SetTestNetMode()
@@ -91,7 +90,6 @@ public class ChainEngineTest : MonoBehaviour
     {
         Debug.Log("Player: " +
                   $"gameId {player.GameId}\n" +
-                  $"apiKey {player.APIKey}\n" +
                   $"walletAddress {player.WalletAddress}");
     }
 
