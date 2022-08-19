@@ -1,14 +1,12 @@
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using UnityEngine.Scripting;
 
-namespace ChainEngine.Model
+namespace ChainEngine.Remote.Models
 {
-    [Preserve]
     public class AuthSocket
     {
         [JsonProperty("error")] [CanBeNull] public string Error;
 
-        [JsonProperty("walletAddress")] [CanBeNull] public string WalletAddress;
+        [JsonProperty("token")] [CanBeNull] public string Token;
     }
 }
