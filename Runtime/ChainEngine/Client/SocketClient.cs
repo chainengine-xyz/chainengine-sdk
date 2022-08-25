@@ -1,4 +1,5 @@
 using System;
+using ChainEngine.Interfaces;
 using SocketIOClient;
 using SocketIOClient.Newtonsoft.Json;
 using ChainEngine.Remote.Datasource;
@@ -8,6 +9,13 @@ namespace ChainEngine.Client
 {
     public static class SocketClient
     {
+        public static IWebGLPollingClient Build(ChainEngineSDK client)
+        {
+            var _socket = new WebGLPollingClient(client);
+
+            return _socket;
+        }
+
         public static SocketIOUnity Build(string _namespace, bool debug = false)
         {
             var uri = new Uri($"{DataSourceApi.ServerURL}/{_namespace}");
