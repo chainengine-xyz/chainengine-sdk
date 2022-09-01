@@ -9,7 +9,10 @@ using ChainEngine.Types;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using System;
+using System.Collections;
+using ChainEngine.Interfaces;
 using JWT;
+using SocketIOClient;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -24,7 +27,11 @@ namespace ChainEngine
 
         private static ChainEngineSDK _instance;
         private PlayerService _playerService;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private IWebGLPollingClient _socketClient;
+#else
         private SocketIOUnity _socketClient;
+#endif
         private bool _alreadyWarned;
         private bool _isProdMode;
         private Player _player;
@@ -39,8 +46,11 @@ namespace ChainEngine
             Application.runInBackground = true;
 
             _instance = this;
-
+#if UNITY_WEBGL && !UNITY_EDITOR
+            _socketClient = SocketClient.Build(_instance);
+#else
             _socketClient = SocketClient.Build("wallet");
+#endif
             _playerService = new PlayerService(_instance);
 
             DontDestroyOnLoad(this.gameObject);
@@ -91,23 +101,21 @@ namespace ChainEngine
         {
             TestNetWarning();
             var nonce = await _playerService.GetNonce();
-
+#if UNITY_WEBGL && !UNITY_EDITOR
+            _socketClient.PollingOnUnityThread($"login/{nonce}", (response) =>
+            {
+                var data = Newtonsoft.Json.JsonConvert.DeserializeObject<AuthSocket>(response);
+                LoginHandler(nonce, data);
+            });
+#else
             _socketClient.OnUnityThread($"login/{nonce}", (response) =>
             {
                 var data = response.GetValue<AuthSocket>();
-
-                if (data!.Error != null)
-                {
-                    ChainEngineActions.OnWalletAuthFailure?.Invoke(new WalletAuthenticationError(data.Error));
-                } else if (data!.Token != null)
-                {
-                    WalletLoginDispatcher(data.Token);
-                }
-
-                _socketClient.Off($"login/{nonce}");
+                LoginHandler(nonce, data);
             });
+#endif
 
-            Application.OpenURL(GetApplicationUri(nonce, wallet: wallet));
+            Application.OpenURL(GetApplicationUri(nonce, wallet));
         }
 
         public async UniTask<PlayerNftCollection> GetPlayerNFTs(int page = 1, int limit = 10)
@@ -129,6 +137,19 @@ namespace ChainEngine
             
             _alreadyWarned = true;
             Debug.LogWarning("ChainEngine's SDK is running on TestNet mode, make sure to switch over MainNet for production builds.");
+        }
+
+        private void LoginHandler(string nonce, AuthSocket data)
+        {
+            if (data!.Error != null)
+            {
+                ChainEngineActions.OnWalletAuthFailure?.Invoke(new WalletAuthenticationError(data.Error));
+            } else if (data!.Token != null)
+            {
+                WalletLoginDispatcher(data.Token);
+            }
+
+            _socketClient.Off($"login/{nonce}");
         }
 
         private void WalletLoginDispatcher(string token)
@@ -153,7 +174,7 @@ namespace ChainEngine
 
         private string GetApplicationUri(string nonce, WalletProvider wallet)
         {
-            var uri = new Uri($"{DataSourceApi.UiURL}/wallet-authentication/{nonce}");
+            var uri = new Uri($"{DataSourceApi.UiURL}/game-authentication/{nonce}");
 
 #if UNITY_ANDROID || UNITY_IOS
             switch(wallet)
@@ -216,5 +237,10 @@ namespace ChainEngine
             }
         }
 #endif
+
+        public void Coroutine(IEnumerator coroutine)
+        {
+            StartCoroutine(coroutine);
+        }
     }
 }
