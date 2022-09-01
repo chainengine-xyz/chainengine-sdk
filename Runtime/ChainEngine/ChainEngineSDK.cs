@@ -174,7 +174,7 @@ namespace ChainEngine
 
         private string GetApplicationUri(string nonce, WalletProvider wallet)
         {
-            var uri = new Uri($"{DataSourceApi.UiURL}/wallet-authentication/{nonce}");
+            var uri = new Uri($"{DataSourceApi.UiURL}/game-authentication/{nonce}");
 
 #if UNITY_ANDROID || UNITY_IOS
             switch(wallet)
