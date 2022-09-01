@@ -90,7 +90,8 @@ public class ChainEngineTest : MonoBehaviour
     {
         Debug.Log("Player: " +
                   $"Game Id: {player?.GameId}\n" +
-                  $"Wallet Address: {player?.WalletAddress}");
+                  $"Wallet Address: {player?.WalletAddress}\n" +
+                  $"Token: {player?.Token}\n");
     }
 
     private void OnWalletAuthFailure(WalletAuthenticationError error)
