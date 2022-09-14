@@ -66,17 +66,17 @@ Returns:
 If you want to authenticate the player using his wallet you can use this method. Right now ChainEngine supports MetaMask, Coinbase, Trust Wallet and WalletConnect.
 
 Important:
-- as we don't know how long the player will take to authenticate you should subscribe to the actions `OnWalletAuthSuccess` and `OnWalletAuthFailure`, these actions once fired will return the authenticated player data or the authentication error message respectively.
+- as we don't know how long the player will take to authenticate you should subscribe to the actions `OnAuthSuccess` and `OnAuthFailure`, these actions once fired will return the authenticated player data or the authentication error message respectively.
 
 ```csharp
     private void OnEnable() {
-        ChainEngineActions.OnWalletAuthSuccess += OnWalletAuthSuccess;
-        ChainEngineActions.OnWalletAuthFailure += OnWalletAuthFailure;
+        ChainEngineActions.OnAuthSuccess += OnAuthSuccess;
+        ChainEngineActions.OnAuthFailure += OnAuthFailure;
     }
 
     private void OnDisable() {
-        ChainEngineActions.OnWalletAuthSuccess -= OnWalletAuthSuccess;
-        ChainEngineActions.OnWalletAuthFailure -= OnWalletAuthFailure;
+        ChainEngineActions.OnAuthSuccess -= OnAuthSuccess;
+        ChainEngineActions.OnAuthFailure -= OnAuthFailure;
     }
 
     public void WalletLogin()
@@ -84,7 +84,7 @@ Important:
         client.WalletLogin();
     }
 
-    private void OnWalletAuthSuccess(Player player)
+    private void OnAuthSuccess(Player player)
     {
         Debug.Log("Player: " +
                   $"gameId {player.GameId}\n" +
@@ -92,7 +92,7 @@ Important:
                   $"walletAddress {player.WalletAddress}");
     }
 
-    private void OnWalletAuthFailure(WalletAuthenticationError error)
+    private void OnAuthFailure(AuthError error)
     {
         Debug.Log(error);
     }

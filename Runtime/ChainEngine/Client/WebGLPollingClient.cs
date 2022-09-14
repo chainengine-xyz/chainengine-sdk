@@ -53,20 +53,20 @@ namespace ChainEngine.Client
 
         private IEnumerator PollingIterator()
         {
-            //Wait for 5 seconds
-            yield return new WaitForSeconds(5);
-
             if (_eventHandlers.Count <= 0) yield break;
             
             foreach (KeyValuePair<string, Action<string>> entry in _eventHandlers)
             {
-                Polling(entry.Key, entry.Value);
+                HandlePolling(entry.Key, entry.Value);
             }
+            
+            //Wait for 5 seconds
+            yield return new WaitForSeconds(5);
 
             yield return PollingIterator();
         }
 
-        private async void Polling(string eventName, Action<string> callback)
+        private async void HandlePolling(string eventName, Action<string> callback)
         {
             var nonce = eventName.Replace("login/", "");
             var req = await SendRequest(nonce);

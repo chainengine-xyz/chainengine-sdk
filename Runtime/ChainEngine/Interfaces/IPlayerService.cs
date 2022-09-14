@@ -21,6 +21,14 @@ namespace ChainEngine.Interfaces
          */
         public UniTask<Nft> GetNFT(string chainId);
 
+        /*
+         * Developer should be able to transfer a NFT from the player's wallet.
+         */
+        public UniTask<string> TransferNft(string walletAddress, string nftId, int amount);
+
+        /*
+         * Developer should be able to authenticate a player.
+         */
         public UniTask<string> GetNonce();
     }
 }
