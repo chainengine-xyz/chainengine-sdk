@@ -6,7 +6,6 @@ using ChainEngine.Remote.Models;
 using ChainEngine.Shared.Exceptions;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace ChainEngine.Remote.Datasource
@@ -23,7 +22,7 @@ namespace ChainEngine.Remote.Datasource
             sdkClient = client;
         }
 
-        public async UniTask<Player> CreateOrFetchPlayer(Player playerDto)
+        public async UniTask<Player> CreateOrFetchPlayer(NewPlayerRequest playerDto)
         {
             try
             {
@@ -94,6 +93,28 @@ namespace ChainEngine.Remote.Datasource
                 if (data == null) throw new Exception("Invalid response from api");
 
                 return data.Nonce;
+            }
+            catch (Exception exception)
+            {
+                throw new PlayerNotCreated(exception.Message, exception);
+            }
+        }
+        
+        public async UniTask<string> TransferNft(SignedTransferRequest transfer)
+        {
+            try
+            {
+                var json = Newtonsoft.Json.JsonConvert.SerializeObject(transfer);
+
+                var jsonEncoded = new System.Text.UTF8Encoding().GetBytes(json);
+
+                var req = await SendRequest("/clientapp/players/nfts/transfer", "POST", jsonEncoded);
+                
+                var data = Newtonsoft.Json.JsonConvert.DeserializeObject<SignedTransferResponse>(req.downloadHandler.text);
+
+                if (data == null) throw new Exception("Invalid response from api");
+
+                return data.Id;
             }
             catch (Exception exception)
             {

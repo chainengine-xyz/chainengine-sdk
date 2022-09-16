@@ -1,18 +1,18 @@
-using ChainEngine.Shared.Exceptions;
 using ChainEngine.Remote.Datasource;
+using ChainEngine.Shared.Exceptions;
 using ChainEngine.Remote.Models;
+using ChainEngine.Interfaces;
 using ChainEngine.Services;
 using ChainEngine.Actions;
 using ChainEngine.Client;
 using ChainEngine.Model;
 using ChainEngine.Types;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
-using System;
-using System.Collections;
-using ChainEngine.Interfaces;
-using JWT;
 using SocketIOClient;
+using UnityEngine;
+using System.Collections;
+using System;
+using JWT;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -34,7 +34,6 @@ namespace ChainEngine
 #endif
         private bool _alreadyWarned;
         private bool _isProdMode;
-        private Player _player;
 
         [SerializeField]
         private string _gameId;
@@ -75,9 +74,11 @@ namespace ChainEngine
 
         public string ApiMode => _isProdMode ? ACCOUNT_MODE_PROD : ACCOUNT_MODE_TEST;
 
-        public Player Player => _player;
-        
         public string GameId => _gameId;
+        
+        public Player Player { get; private set; }
+
+        public bool IsPlayerAuthenticated => Player != null && ValidateToken(Player!.Token) != null;
 
         public void SetTestNetMode()
         {
@@ -92,12 +93,12 @@ namespace ChainEngine
         public async UniTask<Player> CreateOrFetchPlayer(string walletAddress)
         {
             TestNetWarning();
-            _player = await _playerService.CreateOrFetch(walletAddress);
+            Player = await _playerService.CreateOrFetch(walletAddress);
 
-            return _player;
+            return Player;
         }
 
-        public async void WalletLogin(WalletProvider wallet = WalletProvider.Browser)
+        public async void PlayerAuthentication(WalletProvider wallet = WalletProvider.Browser)
         {
             TestNetWarning();
             var nonce = await _playerService.GetNonce();
@@ -105,17 +106,32 @@ namespace ChainEngine
             _socketClient.PollingOnUnityThread($"login/{nonce}", (response) =>
             {
                 var data = Newtonsoft.Json.JsonConvert.DeserializeObject<AuthSocket>(response);
-                LoginHandler(nonce, data);
+                AuthHandler(nonce, data);
             });
 #else
             _socketClient.OnUnityThread($"login/{nonce}", (response) =>
             {
                 var data = response.GetValue<AuthSocket>();
-                LoginHandler(nonce, data);
+                AuthHandler(nonce, data);
             });
 #endif
 
-            Application.OpenURL(GetApplicationUri(nonce, wallet));
+            Application.OpenURL(GetAuthenticationUri(nonce, wallet));
+        }
+
+        public void PlayerLogout()
+        {
+            if (!IsPlayerAuthenticated) return;
+
+            Player = null;
+        }
+
+        public async void TransferNft(string walletAddress, string nftId, int amount)
+        {
+            TestNetWarning();
+            var transferId = await _playerService.TransferNft(walletAddress, nftId, amount);
+            
+            Application.OpenURL(GetTransferSignatureUri(transferId));
         }
 
         public async UniTask<PlayerNftCollection> GetPlayerNFTs(int page = 1, int limit = 10)
@@ -139,40 +155,49 @@ namespace ChainEngine
             Debug.LogWarning("ChainEngine's SDK is running on TestNet mode, make sure to switch over MainNet for production builds.");
         }
 
-        private void LoginHandler(string nonce, AuthSocket data)
+        private void AuthHandler(string nonce, AuthSocket data)
         {
             if (data!.Error != null)
             {
-                ChainEngineActions.OnWalletAuthFailure?.Invoke(new WalletAuthenticationError(data.Error));
+                ChainEngineActions.OnAuthFailure?.Invoke(new AuthError(data.Error));
             } else if (data!.Token != null)
             {
-                WalletLoginDispatcher(data.Token);
+                AuthDispatcher(data.Token);
             }
 
             _socketClient.Off($"login/{nonce}");
         }
 
-        private void WalletLoginDispatcher(string token)
+        private Token ValidateToken(string jwt)
         {
-            var payload = JsonWebToken.Decode(token, String.Empty, false);
+            if (string.IsNullOrEmpty(jwt)) return null;
+            
+            var payload = JsonWebToken.Decode(jwt, String.Empty, false);
             var data = Newtonsoft.Json.JsonConvert.DeserializeObject<Token>(payload);
 
-            if (data == null)
+            return data;
+        }
+
+        private void AuthDispatcher(string jwt)
+        {
+            var token = ValidateToken(jwt);
+
+            if (token == null)
             {
-                ChainEngineActions.OnWalletAuthFailure?.Invoke(new WalletAuthenticationError("Unable to decode player token"));
+                ChainEngineActions.OnAuthFailure?.Invoke(new AuthError("Unable to decode player token"));
                 return;
             }
             
-            _player = new Player{
-                WalletAddress = data.WalletAddress,
-                GameId = GameId,
-                Token = token,
+            Player = new Player{
+                WalletAddress = token.WalletAddress,
+                Id = token.Id,
+                Token = jwt,
             };
             
-            ChainEngineActions.OnWalletAuthSuccess?.Invoke(_player);
+            ChainEngineActions.OnAuthSuccess?.Invoke(Player);
         }
 
-        private string GetApplicationUri(string nonce, WalletProvider wallet)
+        private string GetAuthenticationUri(string nonce, WalletProvider wallet)
         {
             var uri = new Uri($"{DataSourceApi.UiURL}/game-authentication/{nonce}");
 
@@ -214,6 +239,13 @@ namespace ChainEngine
 
             return uri.ToString();
         }
+        
+        private string GetTransferSignatureUri(string transferId)
+        {
+            var uri = new Uri($"{DataSourceApi.UiURL}/sign-transaction/{transferId}");
+
+            return uri.ToString();
+        }
 
         private static bool Exists() {
             return _instance != null;
@@ -221,7 +253,7 @@ namespace ChainEngine
 
         private static bool VerifyGameId()
         {
-            return _instance!.GameId != "";
+            return !string.IsNullOrEmpty(_instance!.GameId);
         }
 
 #if UNITY_EDITOR

@@ -8,20 +8,20 @@ namespace ChainEngine.Services
 {
     public class PlayerService : IPlayerService
     {
-        private readonly ChainEngineSDK _ChainEngineSDK;
         private readonly DataSourceApi _dataSource;
+        private readonly string _gameId;
 
-        public PlayerService(ChainEngineSDK ChainEngineSDK)
+        public PlayerService(ChainEngineSDK chainEngineSDK)
         {
-            _ChainEngineSDK = ChainEngineSDK;
-            _dataSource = new DataSourceApi(_ChainEngineSDK);
+            _dataSource = new DataSourceApi(chainEngineSDK);
+            _gameId = chainEngineSDK.GameId;
         }
 
         public UniTask<Player> CreateOrFetch(string walletAddress)
         {
-            var player = new Player{
-                GameId = _ChainEngineSDK.GameId,
+            var player = new NewPlayerRequest{
                 WalletAddress = walletAddress,
+                GameId = _gameId,
             };
 
             return _dataSource.CreateOrFetchPlayer(player);
@@ -35,6 +35,17 @@ namespace ChainEngine.Services
         public UniTask<Nft> GetNFT(string id)
         {
             return _dataSource.GetPlayerNFT(id);
+        }
+
+        public UniTask<string> TransferNft(string walletAddress, string nftId, int amount)
+        {
+            var transfer = new SignedTransferRequest{
+                WalletAddress = walletAddress,
+                NftId = nftId,
+                Amount = amount,
+            };
+
+            return _dataSource.TransferNft(transfer);
         }
 
         public UniTask<string> GetNonce()
