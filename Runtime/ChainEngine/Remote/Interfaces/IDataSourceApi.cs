@@ -9,7 +9,7 @@ namespace ChainEngine.Remote.Interfaces
         /*
          * Game developer should be able to create a player.
          */
-        public UniTask<Player> CreateOrFetchPlayer(Player dto);
+        public UniTask<Player> CreateOrFetchPlayer(NewPlayerRequest dto);
 
         /*
          * Game developer should be able to fetch player's NFTs.

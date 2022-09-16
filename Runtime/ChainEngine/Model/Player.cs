@@ -4,10 +4,11 @@ namespace ChainEngine.Model
 {
     public class Player
     {
-        [JsonProperty("walletAddress")] public string WalletAddress;
-
-        [JsonProperty("gameId")]
-        public string GameId;
+        [JsonProperty("id")]
+        public string Id;
+        
+        [JsonProperty("walletAddress")]
+        public string WalletAddress;
 
         public string Token;
     }

@@ -1,6 +1,6 @@
 {
   "name": "xyz.chainengine.unity-sdk",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "displayName": "ChainEngine Unity SDK",
   "description": "SDK to help developers integrate ChainEngine APIs to Unity projects.",
   "homepage": "https://chainengine.xyz",
@@ -16,9 +16,9 @@
   },
   "samples": [
     {
-      "displayName": "Basic Sample",
+      "displayName": "ChainEngine SDK Sample",
       "description": "Contains a basic sample scene showing the ChainEngine SDK features.",
-      "path": "Samples~/BasicSample"
+      "path": "Samples~/ChainEngine SDK Sample"
     }
   ]
 }
