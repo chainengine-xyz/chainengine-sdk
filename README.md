@@ -79,9 +79,9 @@ Important:
         ChainEngineActions.OnAuthFailure -= OnAuthFailure;
     }
 
-    public void WalletLogin()
+    public void PlayerAuthentication()
     {
-        client.WalletLogin();
+        client.PlayerAuthentication();
     }
 
     private void OnAuthSuccess(Player player)

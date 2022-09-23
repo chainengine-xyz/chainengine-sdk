@@ -10,7 +10,7 @@ using System;
 public class ChainEngineTest : MonoBehaviour
 {
     private const string WALLET_ADDRESS = "0x7736C454D88B153E44cB5752209131705A804E65";
-    private const string NFT_ID = "fbf72fb5-377f-418f-be76-52854d1a8e47";
+    private const string NFT_ID = "c894fcaa-b7e4-4ee0-bf45-9980d3e358d2";
     
     public Button authButton;
     public Button trustWalletButton;
@@ -52,7 +52,7 @@ public class ChainEngineTest : MonoBehaviour
                   $"Wallet Address: {client.Player?.WalletAddress}");
     }
 
-    public void WalletLogin()
+    public void PlayerAuthentication()
     {
         client.PlayerAuthentication();
     }
@@ -84,6 +84,7 @@ public class ChainEngineTest : MonoBehaviour
         foreach (var nft in nfts.Items())
         {
             Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
+            Debug.Log($"Image: {nft.Metadata.Image}");
         }
     }
 
@@ -92,6 +93,7 @@ public class ChainEngineTest : MonoBehaviour
         var nft = await client.GetNFT(NFT_ID);
         
         Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
+        Debug.Log($"Image: {nft.Metadata.Image}");
     }
 
     public void TransferNft()
