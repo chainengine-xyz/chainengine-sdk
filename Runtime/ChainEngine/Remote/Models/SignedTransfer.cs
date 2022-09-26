@@ -4,7 +4,7 @@ namespace ChainEngine.Remote.Models
 {
     public class SignedTransferRequest
     {
-        [JsonProperty("toWalletAddress")]
+        [JsonProperty("walletAddress")]
         public string WalletAddress;
         
         [JsonProperty("nftId")]

@@ -52,7 +52,7 @@ public class ChainEngineTest : MonoBehaviour
                   $"Wallet Address: {client.Player?.WalletAddress}");
     }
 
-    public void WalletLogin()
+    public void PlayerAuthentication()
     {
         client.PlayerAuthentication();
     }
@@ -84,6 +84,7 @@ public class ChainEngineTest : MonoBehaviour
         foreach (var nft in nfts.Items())
         {
             Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
+            Debug.Log($"Image: {nft.Metadata.Image}");
         }
     }
 
@@ -92,6 +93,7 @@ public class ChainEngineTest : MonoBehaviour
         var nft = await client.GetNFT(NFT_ID);
         
         Debug.Log($"NFT: {nft.Metadata.Name}\nChain ID: {nft.OnChainId}\nID: {nft.Id}");
+        Debug.Log($"Image: {nft.Metadata.Image}");
     }
 
     public void TransferNft()
