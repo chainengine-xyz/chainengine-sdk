@@ -2820,7 +2820,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 787766343154398823}
         m_TargetAssemblyTypeName: ChainEngineTest, Assembly-CSharp
-        m_MethodName: WalletLogin
+        m_MethodName: PlayerAuthentication
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
