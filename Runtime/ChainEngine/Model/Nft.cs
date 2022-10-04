@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine.Scripting;
 
@@ -23,6 +25,12 @@ namespace ChainEngine.Model
 
         [JsonProperty("status")]
         public string Status;
+
+        [JsonProperty("supply")]
+        public string Supply;
+
+        [JsonProperty("holders")]
+        public Hashtable Holders;
 
         [JsonProperty("metadata")]
         public NftMetadata Metadata;
